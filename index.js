@@ -5,13 +5,31 @@ const io = require('socket.io')(http);
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
-
-
+////////////////////////////
+let registeredRooms = ["room1", "room2"];
+/////////////////////////
 io.on('connection', function(socket){
+    socket.join('room1', function(room) {
+        console.log("Joining Room...: " + room);
+
+    });
   console.log('an user connected');
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
+  //////////////////
+  socket.on("joinRoom", room => {
+    console.log("Joining Room...: " + room);
+    if (registeredRooms.includes(room)) {
+      //Socket has joined the request room
+      console.log('an user connected to the room :' + room);
+      return socket.emit("success", "Invalid Room Name: " + room);
+    } else {
+     //No room with the specified Name! (or it could be another reason).
+     return socket.emit("err", "Invalid Room Name: " + room);
+    }
+  })
+  ///////////////////////
 });
 
 io.on('connection', function(socket){
