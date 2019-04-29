@@ -1,6 +1,7 @@
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const uuidv4 = require('uuid/v4');
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
