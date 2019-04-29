@@ -6,11 +6,9 @@ const io = require('socket.io')(http);
 
 app.use(express.static('build'));
 
-let registeredRooms = ["room1", "room2"];
+// let registeredRooms = ["room1", "room2"];
 /////////////////////////
 io.on('connection', function(socket){
-    console.log(socket.id);
-
     socket.on('SEND_MESSAGE', function(data){
      io.emit('RECEIVE_MESSAGE', data);
  })
@@ -18,9 +16,12 @@ io.on('connection', function(socket){
     //     console.log("Joining Room...: " + room);
     //
     // });
-  console.log('an user connected');
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
+
+  socket.on("JOIN_ROOM", room => {
+    console.log("Joining Room: " + room);
+    socket.join(room, function() {
+      console.log(socket.rooms)
+    })
   });
   //////////////////
   // socket.on("joinRoom", room => {
