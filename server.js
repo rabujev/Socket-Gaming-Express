@@ -1,12 +1,11 @@
-const app = require('express')();
+const express = require('express');
+const uuidv4 = require('uuid/v4');
+const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const uuidv4 = require('uuid/v4');
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
-////////////////////////////
+app.use(express.static('build'));
+
 let registeredRooms = ["room1", "room2"];
 /////////////////////////
 io.on('connection', function(socket){
@@ -45,6 +44,6 @@ io.on('connection', function(socket){
   });
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(3001, function(){
+  console.log('listening on *:3001');
 });
