@@ -1,5 +1,7 @@
 
 import React from "react";
+import io from "socket.io-client";
+
 
 class Chat extends React.Component{
     constructor(props){
@@ -10,6 +12,26 @@ class Chat extends React.Component{
             message: '',
             messages: []
         };
+        this.socket = io('localhost:8080');
+
+        this.sendMessage = ev => {
+            ev.preventDefault();
+            this.socket.emit('SEND_MESSAGE', {
+                author: this.state.username,
+                message: this.state.message
+            });
+            this.setState({message: ''});
+
+            this.socket.on('RECEIVE_MESSAGE', function(data){
+                addMessage(data);
+            });
+
+            const addMessage = data => {
+                console.log(data);
+                this.setState({messages: [...this.state.messages, data]}); // les 3 petits points : spread operator : on reprend tout le premier param (tableau) et on rajoute le deuxième param à la fin
+                console.log(this.state.messages);
+            };
+        }
     }
     render(){
         return (
@@ -21,14 +43,18 @@ class Chat extends React.Component{
                                 <div className="card-title">Global Chat</div>
                                 <hr/>
                                 <div className="messages">
-
+                                    {this.state.messages.map(message => { //map en gros c'est genre un foreach
+                                        return (
+                                            <div>{message.author}: {message.message}</div>
+                                        )
+                                    })}
                                 </div>
                                 <div className="footer">
                                     <input type="text" placeholder="Username" value={this.state.username} onChange={ev => this.setState({username: ev.target.value})} className="form-control"/>
                                     <br/>
                                     <input type="text" placeholder="Message" className="form-control" value={this.state.message} onChange={ev => this.setState({message: ev.target.value})}/>
                                     <br/>
-                                    <button className="btn btn-primary form-control">Send</button>
+                                    <button onClick={this.sendMessage} className="btn btn-primary form-control">Send</button>
                                 </div>
                             </div>
                         </div>
