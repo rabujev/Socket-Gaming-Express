@@ -1,7 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
 import uuidv4 from "uuid/v4";
-
 class Chat extends React.Component{
     constructor(props){
         super(props);
@@ -34,16 +33,17 @@ class Chat extends React.Component{
           this.setState({message: ''});
         }
 
-        this.joinRoom = ev => {
-          ev.preventDefault();
-          this.setState({room: uuidv4()}, () => {
-            window.alert("Please join this room: " + this.state.room);
-            console.log(this.state.room);
-          })
-          this.socket.emit('JOIN_ROOM', this.state.room);
-        }
+        // this.joinRoom = ev => {
+        //   ev.preventDefault();
+        //   this.setState({room: uuidv4()}, () => {
+        //     window.alert("Please join this room: " + this.state.room);
+        //     console.log(this.state.room);
+        //   })
+        //   this.socket.emit('JOIN_ROOM', {
+        //     room: this.state.room
+        //   })
+        // }
     }
-
     render(){
         return (
             <div className="container">

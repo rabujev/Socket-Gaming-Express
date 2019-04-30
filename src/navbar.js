@@ -25,11 +25,9 @@ class Navbar extends React.Component{
           ev.preventDefault();
           this.setState({room: uuidv4()}, () => {
             window.alert("Please join this room: " + this.state.room);
-            console.log(this.state.room);
+            console.log("this.state.room = " + this.state.room);
           })
-          this.socket.emit('JOIN_ROOM', {
-            room: this.state.room
-          })
+          this.socket.emit('JOIN_ROOM', this.state.room);
           window.location.replace("http://localhost:3000/chat");
         }
     }
