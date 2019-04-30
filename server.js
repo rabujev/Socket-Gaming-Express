@@ -14,12 +14,12 @@ io.on('connection', function(socket){
 
   socket.on("join_room", paramId => {
     console.log("Joining Room: " + paramId);
-    // if (io.sockets.clients(paramId).length > 0) {
+    if (io.of('/').in(paramId).clients.length > 0) {
         socket.join(paramId, function() {
       console.log(socket.id);
       console.log(socket.rooms);
   })
-    // }
+    }
   });
 });
 
