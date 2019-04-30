@@ -10,16 +10,18 @@ app.use(express.static('build'));
 
 io.on('connection', function(socket){
     socket.on('send_message', function(data){
-     io.emit('receive_message', data);
+     io.in(data.room).emit('receive_message', data);
  })
 
 
-  socket.on("join_room", room => {
-    console.log("Joining Room: " + room);
-    socket.join(room, function() {
+  socket.on("join_room", paramId => {
+    console.log("Joining Room: " + paramId);
+    // if (io.sockets.clients(paramId).length > 0) {
+        socket.join(paramId, function() {
       console.log(socket.id);
       console.log(socket.rooms);
-    })
+  })
+    // }
   });
 });
 

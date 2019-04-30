@@ -15,20 +15,21 @@ class Chat extends React.Component{
 
         this.socket = io('localhost:8080');
 
-        this.state.room = props.match.params.id;
-        console.log(this.state.room);
-        this.socket.emit('join_room', this.state.room);
+        let paramId = props.match.params.id;
+        this.state.room = paramId;
+        console.log(paramId);
+        this.socket.emit('join_room', paramId);
 
         this.socket.on('receive_message', function(data){
             addMessage(data);
         });
         const addMessage = data => {
-            if (this.state.room = data.room) {
-                console.log("this.state.room = " + this.state.room);
-                console.log("data.room = " + data.room);
+            // if ((this.state.room = data.room)) {
+                // console.log("this.state.room = " + this.state.room);
+                // console.log("data.room = " + data.room);
                 this.setState({messages: [...this.state.messages, data]});
-                console.log(this.state.messages);
-            }
+                // console.log(this.state.messages);
+            // }
         };
 
         this.sendMessage = ev => {
