@@ -70,7 +70,6 @@ class Chat extends React.Component{
                               <button onClick={this.sendMessage} className="btn btn-primary form-control">Send</button>
                             </div>
                             <div className="container">
-                              <button  onClick = {this.joinRoom} className="btn btn-secondary form-control">Generate Room</button>
 
                             </div>
                         </div>

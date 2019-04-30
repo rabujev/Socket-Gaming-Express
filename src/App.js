@@ -10,7 +10,6 @@ class App extends Component {
     return (
         <>
             <Router>
-            <Navbar/>
                 <Switch>
                   <Route exact path="/" component={Navbar}/>
                   <Route path="/chat" component={Chat}/>
