@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const uuidv4 = require('uuid/v4');
 const app = express();
@@ -30,7 +32,6 @@ io.on('connection', function(socket){
   });
 });
 
-
-http.listen(8080, function(){
-  console.log('listening on *:8080');
+http.listen(process.env.PORT || 8080 , function(){
+  console.log('listening on * ' + process.env.PORT || 8080);
 });
