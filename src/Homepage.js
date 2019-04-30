@@ -4,22 +4,14 @@ import uuidv4 from "uuid/v4";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 
-class Navbar extends React.Component{
-
+class Homepage extends React.Component{
     constructor(props){
         super(props);
-
         this.state = {
-            username: '',
-            message: '',
-            messages: [],
             room: '',
         };
 
         this.socket = io('localhost:8080');
-
-
-
 
         this.joinRoom = ev => {
           ev.preventDefault();
@@ -35,11 +27,15 @@ class Navbar extends React.Component{
 
     render(){
         return (
-            <div className="container">
-            <button  onClick = {this.joinRoom} className="btn btn-primary form-control">Generate Room</button>
+          <div className="container mt-2">
+            <div className="row justify-content-center">
+              <div className="col-sm-4">
+                <button  onClick = {this.joinRoom} className="btn btn-primary form-control">Generate Game Room</button>
+              </div>
             </div>
+          </div>
         );
     }
 }
 
-export default Navbar;
+export default Homepage;

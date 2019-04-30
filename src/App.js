@@ -8,10 +8,7 @@ import {Switch} from 'react-router';
 class App extends Component {
   render() {
     return (
-        <>
-            <Routes/>
-        </>
-
+      <Routes/>
     );
   }
 }
