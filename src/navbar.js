@@ -23,11 +23,12 @@ class Navbar extends React.Component{
 
         this.joinRoom = ev => {
           ev.preventDefault();
-          this.setState({room: uuidv4()}, () => {
+          let roomId = uuidv4();
+          this.setState({room: roomId}, () => {
             window.alert("Please join this room: " + this.state.room);
             console.log("this.state.room = " + this.state.room);
             this.socket.emit('join_room', this.state.room);
-            window.location.replace("http://localhost:3000/chat");
+            window.location.replace("http://localhost:3000/chat/" + roomId);
           })
         }
     }
@@ -36,10 +37,7 @@ class Navbar extends React.Component{
     render(){
         return (
             <div className="container">
-                <ul className="header">
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link onClick = {this.joinRoom} to="/chat" >GOGO</Link></li>
-                </ul>
+            <button  onClick = {this.joinRoom} className="btn btn-primary form-control">Generate Room</button>
             </div>
         );
     }

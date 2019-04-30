@@ -11,7 +11,7 @@ export const Routes = () => {
         <Router>
             <Switch>
               <Route exact path="/" component={Navbar}/>
-              <Route path="/chat" component={Chat}/>
+              <Route path="/chat/:id" component={Chat}/>
             </Switch>
         </Router>
     </>
