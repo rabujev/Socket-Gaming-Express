@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import Chat from "./Chat";
-import Navbar from "./navbar";
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-
+import Routes from "./Routes";
 
 import JoinRoom from "./JoinRoom";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom"
@@ -12,12 +10,7 @@ class App extends Component {
   render() {
     return (
         <>
-            <Router>
-                <Switch>
-                  <Route exact path="/" component={Navbar}/>
-                  <Route path="/chat" component={Chat}/>
-                </Switch>
-            </Router>
+            <Routes/>
         </>
 
     );

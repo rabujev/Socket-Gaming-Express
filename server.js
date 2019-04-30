@@ -6,18 +6,13 @@ const io = require('socket.io')(http);
 
 app.use(express.static('build'));
 
-// let registeredRooms = ["room1", "room2"];
-/////////////////////////
 io.on('connection', function(socket){
-    socket.on('SEND_MESSAGE', function(data){
-     io.emit('RECEIVE_MESSAGE', data);
+    socket.on('send_message', function(data){
+     io.emit('receive_message', data);
  })
-    // socket.join('room1', function(room) {
-    //     console.log("Joining Room...: " + room);
-    //
-    // });
 
-  socket.on("JOIN_ROOM", room => {
+
+  socket.on("join_room", room => {
     console.log("Joining Room: " + room);
     socket.join(room, function() {
       console.log(socket.id);

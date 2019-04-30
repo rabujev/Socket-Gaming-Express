@@ -1,6 +1,7 @@
 import React from "react";
 import io from "socket.io-client";
 import uuidv4 from "uuid/v4";
+
 class Chat extends React.Component{
     constructor(props){
         super(props);
@@ -14,7 +15,7 @@ class Chat extends React.Component{
 
         this.socket = io('localhost:8080');
 
-        this.socket.on('RECEIVE_MESSAGE', function(data){
+        this.socket.on('receive_message', function(data){
             addMessage(data);
         });
 
@@ -26,24 +27,23 @@ class Chat extends React.Component{
 
         this.sendMessage = ev => {
           ev.preventDefault();
-          this.socket.emit('SEND_MESSAGE', {
+          this.socket.emit('send_message', {
               author: this.state.username,
               message: this.state.message
           })
           this.setState({message: ''});
         }
 
-        // this.joinRoom = ev => {
-        //   ev.preventDefault();
-        //   this.setState({room: uuidv4()}, () => {
-        //     window.alert("Please join this room: " + this.state.room);
-        //     console.log(this.state.room);
-        //   })
-        //   this.socket.emit('JOIN_ROOM', {
-        //     room: this.state.room
-        //   })
-        // }
+        this.joinRoom = ev => {
+          ev.preventDefault();
+          this.setState({room: uuidv4()}, () => {
+            window.alert("Please join this room: " + this.state.room);
+            console.log(this.state.room);
+          })
+          this.socket.emit('join_room', this.state.room);
+        }
     }
+
     render(){
         return (
             <div className="container">
@@ -70,6 +70,7 @@ class Chat extends React.Component{
                               <button onClick={this.sendMessage} className="btn btn-primary form-control">Send</button>
                             </div>
                             <div className="container">
+                              <button  onClick = {this.joinRoom} className="btn btn-secondary form-control">Generate Room</button>
 
                             </div>
                         </div>
