@@ -15,32 +15,35 @@ class Chat extends React.Component{
 
         this.socket = io('localhost:8080');
 
-        this.socket.on('RECEIVE_MESSAGE', function(data){
+        this.state.room = props.match.params.id;
+        console.log(this.state.room);
+        this.socket.emit('join_room', this.state.room);
+
+        this.socket.on('receive_message', function(data){
             addMessage(data);
         });
-
         const addMessage = data => {
-            console.log(data);
-            this.setState({messages: [...this.state.messages, data]});
-            console.log(this.state.messages);
+            if (this.state.room = data.room) {
+                console.log("this.state.room = " + this.state.room);
+                console.log("data.room = " + data.room);
+                this.setState({messages: [...this.state.messages, data]});
+                console.log(this.state.messages);
+            }
         };
 
         this.sendMessage = ev => {
           ev.preventDefault();
-          this.socket.emit('SEND_MESSAGE', {
+          this.socket.emit('send_message', {
               author: this.state.username,
-              message: this.state.message
+              message: this.state.message,
+              room: this.state.room
           })
           this.setState({message: ''});
         }
 
-        this.joinRoom = ev => {
-          ev.preventDefault();
-          this.setState({room: uuidv4()}, () => {
-            window.alert("Please join this room: " + this.state.room);
-            console.log(this.state.room);
-          })
-          this.socket.emit('JOIN_ROOM', this.state.room);
+        this.home = ev => {
+            ev.preventDefault();
+            window.location.replace("http://localhost:3000/");
         }
     }
 
@@ -70,7 +73,7 @@ class Chat extends React.Component{
                               <button onClick={this.sendMessage} className="btn btn-primary form-control">Send</button>
                             </div>
                             <div className="container">
-                              <button  onClick = {this.joinRoom} className="btn btn-secondary form-control">Generate Room</button>
+                              <button  onClick = {this.home} className="btn btn-secondary form-control">Home</button>
 
                             </div>
                         </div>
