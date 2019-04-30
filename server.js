@@ -20,7 +20,8 @@ io.on('connection', function(socket){
   socket.on("JOIN_ROOM", room => {
     console.log("Joining Room: " + room);
     socket.join(room, function() {
-      console.log(socket.rooms)
+      console.log(socket.id);
+      console.log(socket.rooms);
     })
   });
   //////////////////

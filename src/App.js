@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Chat from "./Chat";
 import Navbar from "./navbar";
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+
 
 import JoinRoom from "./JoinRoom";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom"
