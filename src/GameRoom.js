@@ -10,6 +10,15 @@ function Square(props) {
 }
 
 class Row extends React.Component {
+  createRow = (square) => {
+    let row = [];
+      for (let i = 0; i < 10; i++) {
+        row.push(square);
+      }
+      console.log(row);
+      return row;
+
+  }
 
   render() {
       let tenSquares = [];
