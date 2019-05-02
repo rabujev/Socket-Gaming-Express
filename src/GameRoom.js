@@ -1,10 +1,9 @@
 import React from 'react';
 import io from "socket.io-client";
-
 function Square(props) {
   return (
     <button className="square" id={props.id}>
-    ""
+
     </button>
   );
 }
@@ -28,24 +27,24 @@ class Row extends React.Component {
 }
 
 class Board extends React.Component {
-  renderRow(i) {
+  renderRow(rowID) {
     return (
-      <Row id={i}/>
+      <Row id={rowID}/>
     )
   }
   render() {
     return (
-      <div className="boardGame">
-        {this.renderRow(1)}
-        {this.renderRow(2)}
-        {this.renderRow(3)}
-        {this.renderRow(4)}
-        {this.renderRow(5)}
-        {this.renderRow(6)}
-        {this.renderRow(7)}
-        {this.renderRow(8)}
-        {this.renderRow(9)}
-        {this.renderRow(10)}
+      <div className="boardGame container">
+        {this.renderRow('A')}
+        {this.renderRow('B')}
+        {this.renderRow('C')}
+        {this.renderRow('D')}
+        {this.renderRow('E')}
+        {this.renderRow('F')}
+        {this.renderRow('G')}
+        {this.renderRow('H')}
+        {this.renderRow('I')}
+        {this.renderRow('J')}
       </div>
     )
   }
