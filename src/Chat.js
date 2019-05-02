@@ -15,21 +15,24 @@ class Chat extends React.Component{
 
         this.socket = io('localhost:8080');
 
-        let paramId = props.match.params.id;
+        this.socket.on('Room is full', function(){
+            window.alert('This Room is already full')
+            window.location.replace("http://localhost:3000/");
+        });
+
+        let paramId = props.match.params.id;  // takes the dynamic part of URL (see Routes.js)
+
+
         this.state.room = paramId;
         console.log(paramId);
-        this.socket.emit('join_room', paramId);
+        this.socket.emit('join_room', paramId);  // attempt to join room upon loading the page
+
 
         this.socket.on('receive_message', function(data){
             addMessage(data);
         });
-        const addMessage = data => {
-            // if ((this.state.room = data.room)) {
-                // console.log("this.state.room = " + this.state.room);
-                // console.log("data.room = " + data.room);
+        const addMessage = data => {     // adds the messages that are received and sent to array to then display them
                 this.setState({messages: [...this.state.messages, data]});
-                // console.log(this.state.messages);
-            // }
         };
 
         this.sendMessage = ev => {
@@ -46,6 +49,8 @@ class Chat extends React.Component{
             ev.preventDefault();
             window.location.replace("http://localhost:3000/");
         }
+
+
     }
 
     render(){

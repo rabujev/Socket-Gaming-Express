@@ -10,22 +10,28 @@ app.use(express.static('build'));
 
 io.on('connection', function(socket){
 
-    // SENDING A MESSAGE
-    socket.on('send_message', function(data){
-        io.in(data.room).emit('receive_message', data);
- })
 
     // JOINING A ROOM
   socket.on("join_room", paramId => { // paramId is taken from the URL
     console.log("Joining Room: " + paramId);
-    io.in(paramId).clients((error, clients) => {  //this was taken from the doc
+    io.in(paramId).clients((error, clients) => {  //this was taken from the socket.io doc, lists all sockets in a room
       if (error) throw error;
       console.log(clients);  // shows sockets in the room before attempting to join it
       if (clients.length < 2) {  // max 2 sockets in the room
           socket.join(paramId, function() {
               console.log("socket.id = " + socket.id); //id of the socket
               console.log(socket.rooms); // list of rooms that the socket is in
+
+              // SENDING A MESSAGE, (nested in here to only do if the socket is indeed in the room (data.room is the URL))
+
+              socket.on('send_message', function(data){
+                  io.in(data.room).emit('receive_message', data);
+           })
+
     })
+      }
+      else {
+          socket.emit("Room is full");
       }
 
     });
