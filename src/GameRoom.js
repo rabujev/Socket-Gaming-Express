@@ -10,16 +10,9 @@ function Square(props) {
 }
 
 class Row extends React.Component {
-  createRow = (square) => {
-    let row = [];
-      for (let i = 0; i < 10; i++) {
-        row.push(square);
-      }
-      console.log(row);
-      return row;
-
+  constructor(props) {
+    super(props);
   }
-
   render() {
       let tenSquares = [];
       for (let i = 1; i < 11; i++) {
@@ -27,10 +20,24 @@ class Row extends React.Component {
       }
 
     return (
-        <div className="boardRow">
+        <div className="boardRow" id = {this.props.id} >
           {tenSquares}
         </div>
     );
+  }
+}
+
+class Board extends React.Component {
+  render() {
+    let fullBoard = [];
+    for (let i = 1; i < 11; i++) {
+      fullBoard.push(<Row id={i}/>)
+    }
+    return (
+      <div className="board">
+        {fullBoard}
+      </div>
+    )
   }
 }
 
