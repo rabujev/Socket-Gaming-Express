@@ -9,28 +9,36 @@ const io = require('socket.io')(http);
 app.use(express.static('build'));
 
 io.on('connection', function(socket){
+
+    // SENDING A MESSAGE
     socket.on('send_message', function(data){
-     io.in(data.room).emit('receive_message', data);
+        io.in(data.room).emit('receive_message', data);
  })
 
-
-  socket.on("join_room", paramId => {
+    // JOINING A ROOM
+  socket.on("join_room", paramId => { // paramId is taken from the URL
     console.log("Joining Room: " + paramId);
-    if (io.of('/').in(paramId).clients.length > 0) {
-        socket.join(paramId, function() {
-      console.log(socket.id);
-      console.log(socket.rooms);
-  })
-    }
+    io.in(paramId).clients((error, clients) => {  //this was taken from the doc
+      if (error) throw error;
+      console.log(clients);  // shows sockets in the room before attempting to join it
+      if (clients.length < 2) {  // max 2 sockets in the room
+          socket.join(paramId, function() {
+              console.log("socket.id = " + socket.id); //id of the socket
+              console.log(socket.rooms); // list of rooms that the socket is in
+    })
+      }
+
+    });
+
   });
 });
 
 
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
-  });
-});
+// io.on('connection', function(socket){
+//   socket.on('chat message', function(msg){
+//     io.emit('chat message', msg);
+//   });
+// }); // Je ne sais pas à quoi ceci sert, si Simon non plus alors à delete.
 
 http.listen(process.env.PORT || 8080 , function(){
   console.log('listening on * ' + process.env.PORT || 8080);
