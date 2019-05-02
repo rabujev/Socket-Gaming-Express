@@ -13,33 +13,47 @@ code {
     monospace;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.boardGame {
+  width : 90vh;
+  height: 90vh;
+  max-height: 90vw;
+}
 
 .boardRow {
+  height: 10%;
+  width: 100%;
   padding: 0;
   margin: 0;
   line-height: 0;
   }
 
 /* styling the odd board squares  */
-.boardRow:nth-child(odd) .square:nth-child(odd) {
-  background-color: #000;
+.boardRow:nth-child(odd) .square:nth-child(even) {
+  background-color: rgb(0, 110, 144, .9);
 }
 
-.boardRow:nth-child(even) .square:nth-child(even) {
-  background-color: #000;
+.boardRow:nth-child(even) .square:nth-child(odd) {
+  background-color: rgb(0, 110, 144, .9);
 }
 
  /* styling the even board squares */
 
  .boardRow:nth-child(odd) .square:nth-child(odd) {
-   background-color: #000;
+   background-color: rgb(241, 143, 1, .6);
  }
 
  .boardRow:nth-child(even) .square:nth-child(even) {
-   background-color: #000;
+   background-color: rgb(241, 143, 1, .6);
  }
- 
+
 .square {
-  width: 3em;
-  height: 3em;
+  width: 10%;
+  height: 100%;
+  border: 1px solid transparent;
 }

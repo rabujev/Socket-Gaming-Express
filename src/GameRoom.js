@@ -34,17 +34,19 @@ class Board extends React.Component {
   }
   render() {
     return (
-      <div className="boardGame container">
-        {this.renderRow('A')}
-        {this.renderRow('B')}
-        {this.renderRow('C')}
-        {this.renderRow('D')}
-        {this.renderRow('E')}
-        {this.renderRow('F')}
-        {this.renderRow('G')}
-        {this.renderRow('H')}
-        {this.renderRow('I')}
-        {this.renderRow('J')}
+      <div className="container">
+        <div className="boardGame">
+          {this.renderRow('A')}
+          {this.renderRow('B')}
+          {this.renderRow('C')}
+          {this.renderRow('D')}
+          {this.renderRow('E')}
+          {this.renderRow('F')}
+          {this.renderRow('G')}
+          {this.renderRow('H')}
+          {this.renderRow('I')}
+          {this.renderRow('J')}
+        </div>
       </div>
     )
   }
