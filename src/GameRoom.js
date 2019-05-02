@@ -3,8 +3,8 @@ import io from "socket.io-client";
 
 function Square(props) {
   return (
-    <button className="square">
-
+    <button className="square" id={props.id}>
+    {props.id}
     </button>
   );
 }
@@ -13,8 +13,8 @@ class Row extends React.Component {
 
   render() {
       let tenSquares = [];
-      for (let i = 0; i < 10; i++) {
-        tenSquares.push(<Square/>);
+      for (let i = 1; i < 11; i++) {
+        tenSquares.push(<Square id = {i}/>);
       }
 
     return (
