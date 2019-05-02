@@ -4,7 +4,7 @@ import io from "socket.io-client";
 function Square(props) {
   return (
     <button className="square" id={props.id}>
-    {props.id}
+    ""
     </button>
   );
 }
@@ -28,17 +28,27 @@ class Row extends React.Component {
 }
 
 class Board extends React.Component {
-  render() {
-    let fullBoard = [];
-    for (let i = 1; i < 11; i++) {
-      fullBoard.push(<Row id={i}/>)
-    }
+  renderRow(i) {
     return (
-      <div className="board">
-        {fullBoard}
+      <Row id={i}/>
+    )
+  }
+  render() {
+    return (
+      <div className="boardGame">
+        {this.renderRow(1)}
+        {this.renderRow(2)}
+        {this.renderRow(3)}
+        {this.renderRow(4)}
+        {this.renderRow(5)}
+        {this.renderRow(6)}
+        {this.renderRow(7)}
+        {this.renderRow(8)}
+        {this.renderRow(9)}
+        {this.renderRow(10)}
       </div>
     )
   }
 }
 
-export default Row;
+export default Board;

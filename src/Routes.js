@@ -4,7 +4,7 @@ import {Switch} from 'react-router';
 
 import Chat from "./Chat";
 import Homepage from "./Homepage";
-import Row from "./GameRoom";
+import Board from "./GameRoom";
 
 export const Routes = () => {
   return(
@@ -13,7 +13,7 @@ export const Routes = () => {
             <Switch>
               <Route exact path="/" component={Homepage}/>
               <Route path="/chat/:id" component={Chat}/>
-              <Route path="/gameRoom/:id" component={Row}/>
+              <Route path="/gameRoom/:id" component={Board}/>
             </Switch>
         </Router>
     </>
