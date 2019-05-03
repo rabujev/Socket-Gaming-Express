@@ -1,8 +1,9 @@
 import React from 'react';
 import io from "socket.io-client";
+
 function Square(props) {
   return (
-    <button className="square" id={props.id}>
+    <button className={"square " + props.className}>
 
     </button>
   );
@@ -11,41 +12,37 @@ function Square(props) {
 class Row extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      tenSquares: []
+    }
+    for (let i = 1; i < 11; i++) {
+      this.state.tenSquares.push(<Square className={i}/>);
+    }
   }
-  render() {
-      let tenSquares = [];
-      for (let i = 1; i < 11; i++) {
-        tenSquares.push(<Square id = {i}/>);
-      }
 
+  render() {
     return (
-        <div className="boardRow" id = {this.props.id} >
-          {tenSquares}
+        <div className="boardRow" id={this.props.id}>
+          {this.state.tenSquares}
         </div>
     );
   }
 }
 
 class Board extends React.Component {
-  renderRow(rowID) {
-    return (
-      <Row id={rowID}/>
-    )
+  constructor(props) {
+    super(props);
+    let rowID = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+    this.state = {
+      row: rowID.map(id => <Row id={id}/>),
+    };
   }
+
   render() {
     return (
       <div className="container">
         <div className="boardGame">
-          {this.renderRow('A')}
-          {this.renderRow('B')}
-          {this.renderRow('C')}
-          {this.renderRow('D')}
-          {this.renderRow('E')}
-          {this.renderRow('F')}
-          {this.renderRow('G')}
-          {this.renderRow('H')}
-          {this.renderRow('I')}
-          {this.renderRow('J')}
+          {this.state.row}
         </div>
       </div>
     )
