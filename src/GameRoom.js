@@ -24,24 +24,45 @@ class Board extends React.Component {
     super(props);
     this.rowID = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     this.state = {
-      //checkerBoard: {A: [o, x, -, x...]}
       checkerBoard: {},
     };
     this.state.checkerBoard = this.rowID.reduce((result, element, i) => {
-      result[element] = i;
+      result[element] = new Array(10).fill('-');
       return result;
     }, {});
+
+    // Creating the initial state of the checkerBoard
+    for (let key in this.state.checkerBoard) {
+      for (let i = 0; i < 10; i++) {
+        switch (key) {
+          case 'A':
+          case 'C':
+            if (i % 2 !== 0) {
+              this.state.checkerBoard[key][i] = 'X';
+            }
+            break;
+          case 'B':
+          case 'D':
+          if (i % 2 === 0) {
+            this.state.checkerBoard[key][i] = 'X';
+          }
+            break;
+          case 'G':
+          case 'I':
+            if (i % 2 !== 0) {
+              this.state.checkerBoard[key][i] = 'O';
+            }
+            break;
+          case 'H':
+          case 'J':
+          if (i % 2 === 0) {
+            this.state.checkerBoard[key][i] = 'O';
+          }
+            break;
+        }
+      }
+    }
     console.log(this.state.checkerBoard);
-    // let tempBoard = {};
-    // for(let i = 0; i < this.rowID.length; i++) {
-    //   let key = this.rowID[i];
-    //   let temp = [];
-    //   for (let j = 0; j < 10; j++) {
-    //     temp.push(j);
-    //   }
-    //   tempBoard[key] = temp;
-    // }
-    // console.log(tempBoard);
     };
 
   render() {
@@ -52,7 +73,6 @@ class Board extends React.Component {
     //  We map on these numerical ids, and replace them with <Square/>,
     //  Passing it an id and key referencing the row letter + square number.
     const rowContent = this.rowID.map(row => squareNumber.map(number => (<Square id={row + number} key={row + number}/>)));
-
 
     return (
       <div className="container">
