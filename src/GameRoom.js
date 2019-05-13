@@ -5,6 +5,7 @@ function Square(props) {
 
   return (
     <button className={"square"} id={props.id}>
+    {props.stateOfSquare}
     </button>
   );
 }
@@ -83,7 +84,7 @@ class Board extends React.Component {
     //  For each "letter" of rowID, replace it with  the numerical ID of each square,
     //  We map on these numerical ids, and replace them with <Square/>,
     //  Passing it an id and key referencing the row letter + square number.
-    const rowContent = this.rowID.map(row => squareNumber.map(number => (<Square id={row + number} key={row + number} />)));
+    const rowContent = this.rowID.map(row => squareNumber.map(number => (<Square id={row + number} key={row + number} stateOfSquare={this.state.checkerBoard[row][(number - 1)]}/>)));
     console.log("rowContent = " + rowContent);
 
     return (
