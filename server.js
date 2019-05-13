@@ -7,13 +7,14 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 app.use(express.static('build'));
+
 io.on('connection', function(socket){
 
     // SENDING A MESSAGE
     socket.on('send_message', function(data){
         io.in(data.room).emit('receive_message', data);
  })
-
+    players = []
     // JOINING A ROOM
   socket.on("join_room", paramId => { // paramId is taken from the URL
     console.log("Joining Room: " + paramId);
@@ -23,6 +24,16 @@ io.on('connection', function(socket){
       if (clients.length < 2) {  // max 2 sockets in the room
           socket.join(paramId, function() {
               console.log("socket.id = " + socket.id); //id of the socket
+              if (clients.length < 1) {
+                  let player = 1;
+                  console.log(player);
+                  socket.emit('playerOrder', player);
+              } else {
+                  let player = 2;
+                  socket.emit('playerOrder', player);
+              };
+              console.log('player 0 = ' + players[0]);
+              console.log('player 1 = ' + players[1]);
               console.log(socket.rooms); // list of rooms that the socket is in
     })
       }

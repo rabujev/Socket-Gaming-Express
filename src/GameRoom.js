@@ -23,10 +23,19 @@ function Row(props){
 class Board extends React.Component {
   constructor(props) {
     super(props);
-    this.rowID = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     this.state = {
       checkerBoard: {},
+      room: '',
     };
+
+
+    this.socket = io('localhost:8080');
+
+    let paramId = props.match.params.id;
+    this.state.room = paramId;
+    this.socket.emit('join_room', paramId);  // attempt to join room upon loading the page
+
+    this.rowID = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     this.state.checkerBoard = this.rowID.reduce((result, element, i) => {
       result[element] = new Array(10).fill('');
 
@@ -48,6 +57,11 @@ class Board extends React.Component {
     O.forEach(letter => fillRow(letter, 'O'));
 
     console.table(this.state.checkerBoard);
+
+    this.socket.on('playerOrder', function(player){
+        return player;
+        console.log(player);
+    });
   };
 
   render() {
