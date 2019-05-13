@@ -3,7 +3,11 @@ import io from "socket.io-client";
 
 function Square(props) {
     return (
-    <div className={"square"} id={props.id}>
+    <div
+      className={"square"}
+      id={props.id}
+      onClick={props.onClick}
+    >
       {props.stateOfSquare &&
         <img src={`/images/${props.stateOfSquare}.png`}/>
       }
@@ -14,7 +18,10 @@ function Square(props) {
 // Row is only used as a styling tool
 function Row(props){
   return (
-      <div className="boardRow" id={props.id}>
+      <div
+        className="boardRow"
+        id={props.id}
+      >
         {props.content}
       </div>
   );
@@ -29,12 +36,10 @@ class Board extends React.Component {
     };
     this.state.checkerBoard = this.rowID.reduce((result, element, i) => {
       result[element] = new Array(10).fill('');
-
       return result;
     }, {});
 
     // Creating the initial state of the checkerBoard
-
     let X = [...'ABCD'];
     let O = [...'GHIJ'];
 
@@ -57,12 +62,20 @@ class Board extends React.Component {
     //  For each "letter" of rowID, replace it with  the numerical ID of each square,
     //  We map on these numerical ids, and replace them with <Square/>,
     //  Passing it an id and key referencing the row letter + square number.
-    const rowContent = this.rowID.map(row => squareNumber.map(number => (<Square id={row + number} key={row + number} stateOfSquare={this.state.checkerBoard[row][(number - 1)]}/>)));
+    const rowContent = this.rowID.map(row => squareNumber.map(number =>(<Square
+      id={row + number}
+      key={row + number}
+      stateOfSquare={this.state.checkerBoard[row][(number - 1)]}
+    />)));
 
     return (
       <div className="container">
         <div className="boardGame">
-          {this.rowID.map((id, index) => <Row id={id} key={id} content={rowContent[index]}/>)}
+          {this.rowID.map((id, index) => <Row
+            id={id}
+            key={id}
+            content={rowContent[index]}
+          />)}
         </div>
       </div>
     )
