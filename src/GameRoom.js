@@ -5,7 +5,7 @@ function Square(props) {
 
   return (
     <button className={"square"} id={props.id}>
-    {props.stateOfSquare}
+    <img src={`/public/images/${props.stateOfSquare}.jpeg`} />  
     </button>
   );
 }
