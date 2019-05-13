@@ -4,9 +4,9 @@ import io from "socket.io-client";
 function Square(props) {
 
   return (
-    <button className={"square"} id={props.id}>
-    <img src={`/public/images/${props.stateOfSquare}.jpeg`} />  
-    </button>
+  <div className={"square"} id={props.id}>
+    <img src={`/public/images/${props.stateOfSquare}.jpeg`}/>
+  </div>
   );
 }
 
@@ -85,7 +85,6 @@ class Board extends React.Component {
     //  We map on these numerical ids, and replace them with <Square/>,
     //  Passing it an id and key referencing the row letter + square number.
     const rowContent = this.rowID.map(row => squareNumber.map(number => (<Square id={row + number} key={row + number} stateOfSquare={this.state.checkerBoard[row][(number - 1)]}/>)));
-    console.log("rowContent = " + rowContent);
 
     return (
       <div className="container">
