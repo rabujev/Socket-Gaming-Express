@@ -5,7 +5,7 @@ function Square(props) {
 
   return (
     <button className={"square"} id={props.id}>
-
+{props.stateOfSquare}
     </button>
   );
 }
@@ -26,9 +26,20 @@ class Board extends React.Component {
     this.state = {
       //checkerBoard: {A: [o, x, -, x...]}
       checkerBoard: {},
+      CheckMyAss: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',]
+      // initialStateTop1: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0], // rows A and C ,  Can't use x and -
+      // initialStateTop2: [0, 1, 0, 1, 0, 1, 0, 1, 0, 1], // rows B and D
+      // initialStateBot1: [0, 2, 0, 2, 0, 2, 0, 2, 0, 2], // rows H and J
+      // initialStateBot2: [2, 0, 2, 0, 2, 0, 2, 0, 2, 0], // rows G and I
+      // initialStateNull: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 2 middle rows (E and F)
     };
     this.state.checkerBoard = this.rowID.reduce((result, element, i) => {
-      result[element] = i;
+        // Another method (less elegant but with less code)
+      // result.A = result.C = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0];
+      // result.B = result.D = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
+      // result.H = result.J = [0, 2, 0, 2, 0, 2, 0, 2, 0, 2];
+      // result.G = result.I = [2, 0, 2, 0, 2, 0, 2, 0, 2, 0];
+      // result.E = result.F = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       return result;
     }, {});
     console.log(this.state.checkerBoard);
@@ -51,8 +62,8 @@ class Board extends React.Component {
     //  For each "letter" of rowID, replace it with  the numerical ID of each square,
     //  We map on these numerical ids, and replace them with <Square/>,
     //  Passing it an id and key referencing the row letter + square number.
-    const rowContent = this.rowID.map(row => squareNumber.map(number => (<Square id={row + number} key={row + number}/>)));
-
+    const rowContent = this.rowID.map(row => squareNumber.map(number => (<Square id={row + number} key={row + number} stateOfSquare={this.state.checkerBoard[row][(number - 1)]}/>)));
+    console.log("rowContent = " + rowContent);
 
     return (
       <div className="container">
