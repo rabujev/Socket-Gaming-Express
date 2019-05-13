@@ -58,3 +58,8 @@ code {
   height: 100%;
   border: 1px solid transparent;
 }
+
+img {
+  width: 100%;
+  height: 100%;
+}

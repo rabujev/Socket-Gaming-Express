@@ -2,12 +2,13 @@ import React from 'react';
 import io from "socket.io-client";
 
 function Square(props) {
-
-  return (
-  <div className={"square"} id={props.id}>
-    <img src={`/public/images/${props.stateOfSquare}.jpeg`}/>
-  </div>
-  );
+    return (
+    <div className={"square"} id={props.id}>
+      {props.stateOfSquare &&
+        <img src={`/images/${props.stateOfSquare}.png`}/>
+      }
+    </div>
+    );
 }
 
 // Row is only used as a styling tool
@@ -25,57 +26,29 @@ class Board extends React.Component {
     this.rowID = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     this.state = {
       checkerBoard: {},
-      // initialStateTop1: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0], // rows A and C ,  Can't use x and -
-      // initialStateTop2: [0, 1, 0, 1, 0, 1, 0, 1, 0, 1], // rows B and D
-      // initialStateBot1: [0, 2, 0, 2, 0, 2, 0, 2, 0, 2], // rows H and J
-      // initialStateBot2: [2, 0, 2, 0, 2, 0, 2, 0, 2, 0], // rows G and I
-      // initialStateNull: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // 2 middle rows (E and F)
     };
     this.state.checkerBoard = this.rowID.reduce((result, element, i) => {
-        // Another method (less elegant but with less code)
-      // result.A = result.C = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0];
-      // result.B = result.D = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
-      // result.H = result.J = [0, 2, 0, 2, 0, 2, 0, 2, 0, 2];
-      // result.G = result.I = [2, 0, 2, 0, 2, 0, 2, 0, 2, 0];
-      // result.E = result.F = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      result[element] = new Array(10).fill('-');
+      result[element] = new Array(10).fill('');
 
       return result;
     }, {});
 
     // Creating the initial state of the checkerBoard
-    for (let key in this.state.checkerBoard) {
-      for (let i = 0; i < 10; i++) {
-        switch (key) {
-          case 'A':
-          case 'C':
-            if (i % 2 !== 0) {
-              this.state.checkerBoard[key][i] = 'X';
-            }
-            break;
-          case 'B':
-          case 'D':
-          if (i % 2 === 0) {
-            this.state.checkerBoard[key][i] = 'X';
-          }
-            break;
-          case 'G':
-          case 'I':
-            if (i % 2 !== 0) {
-              this.state.checkerBoard[key][i] = 'O';
-            }
-            break;
-          case 'H':
-          case 'J':
-          if (i % 2 === 0) {
-            this.state.checkerBoard[key][i] = 'O';
-          }
-            break;
-        }
-      }
-    }
-    console.log(this.state.checkerBoard);
+
+    let X = [...'ABCD'];
+    let O = [...'GHIJ'];
+
+    let fillRow = (rowLetter, filler) => {
+      let rowNumber = this.rowID.indexOf(rowLetter);
+      this.state.checkerBoard[rowLetter] = this.state.checkerBoard[rowLetter].map((square, columnNumber)  =>
+        ((rowNumber + columnNumber) % 2 ? filler : '')
+      );
     };
+    X.forEach(letter => fillRow(letter, 'X'));
+    O.forEach(letter => fillRow(letter, 'O'));
+
+    console.table(this.state.checkerBoard);
+  };
 
   render() {
     const squareNumber = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

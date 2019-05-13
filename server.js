@@ -7,7 +7,6 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 app.use(express.static('build'));
-app.use(express.static('public'));
 io.on('connection', function(socket){
 
     // SENDING A MESSAGE
