@@ -7,6 +7,7 @@ function Square(props) {
       className={"square"}
       id={props.id}
       onClick={props.onClick}
+      stateofsquare={props.stateOfSquare}
     >
       {props.stateOfSquare &&
         <img src={`/images/${props.stateOfSquare}.png`}/>
@@ -30,13 +31,14 @@ function Row(props){
 class Board extends React.Component {
   constructor(props) {
     super(props);
-    this.rowID = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+    this.rowID = [...'ABCDEFGHIJ'];
     this.state = {
       checkerBoard: {},
+      isSelected: [],
     };
-    this.state.checkerBoard = this.rowID.reduce((result, element, i) => {
-      result[element] = new Array(10).fill('');
-      return result;
+    this.state.checkerBoard = this.rowID.reduce((accumulator, currentValue, i) => {
+      accumulator[currentValue] = new Array(10).fill('');
+      return accumulator;
     }, {});
 
     // Creating the initial state of the checkerBoard
@@ -53,11 +55,42 @@ class Board extends React.Component {
     O.forEach(letter => fillRow(letter, 'O'));
 
     console.table(this.state.checkerBoard);
+
   };
 
-  const handleClick = squareID => {
+  handleClick(row, number) {
+    if (this.state.checkerBoard[row][number]) {
+      this.state.isSelected = new Array(row, number);
+      console.log(this.state.isSelected);
+    } else {
+      return this.handleEmpty(row, number);
+    }
 
-  }
+  };
+
+  handleEmpty(row, number) {
+    if (this.state.isSelected) {
+      let checkerSelected = [...this.state.isSelected];
+      let checkerBoard = this.state.checkerBoard;
+      let checkerColour = checkerBoard[checkerSelected[0]][checkerSelected[1]];
+
+      // if ((row + number) % 2) {
+      //   console.log('invalid move, that\'s a forbidden square mate!');
+      //   return;
+      // } else if (checkerBoard[row][number]) {
+      //   console.log('invalid move, that square is taken by another pawn, lad!');
+      //   return;
+      // } else {
+      //   checkerBoard[row][number] = checkerBoard[checkerSelected[0]][checkerSelected[1]];
+      //   checkerBoard[checkerSelected[0]][checkerSelected[1]] = '';
+      //   this.setState( {
+      //     checkerBoard: checkerBoard
+      //   })
+      //   console.table(this.state.checkerBoard);
+      // }
+    }
+  };
+
   render() {
     const squareNumber = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -69,6 +102,7 @@ class Board extends React.Component {
       id={row + number}
       key={row + number}
       stateOfSquare={this.state.checkerBoard[row][(number - 1)]}
+      onClick={() => this.handleClick(row, (number - 1))}
     />)));
 
     return (
