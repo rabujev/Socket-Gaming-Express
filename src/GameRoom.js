@@ -59,6 +59,7 @@ class Board extends React.Component {
   };
 
   handleClick(row, number) {
+    console.log(row, number);
     if (this.state.checkerBoard[row][number]) {
       this.state.isSelected = new Array(row, number);
       console.log(this.state.isSelected);
@@ -68,26 +69,24 @@ class Board extends React.Component {
 
   };
 
-  handleEmpty(row, number) {
+  handleEmpty(rowLetter, columnNumber) {
     if (this.state.isSelected) {
       let checkerSelected = [...this.state.isSelected];
       let checkerBoard = this.state.checkerBoard;
       let checkerColour = checkerBoard[checkerSelected[0]][checkerSelected[1]];
+      let rowNumericalValue = this.rowID.indexOf(rowLetter);
 
-      // if ((row + number) % 2) {
-      //   console.log('invalid move, that\'s a forbidden square mate!');
-      //   return;
-      // } else if (checkerBoard[row][number]) {
-      //   console.log('invalid move, that square is taken by another pawn, lad!');
-      //   return;
-      // } else {
-      //   checkerBoard[row][number] = checkerBoard[checkerSelected[0]][checkerSelected[1]];
-      //   checkerBoard[checkerSelected[0]][checkerSelected[1]] = '';
-      //   this.setState( {
-      //     checkerBoard: checkerBoard
-      //   })
-      //   console.table(this.state.checkerBoard);
-      // }
+      if (!((rowNumericalValue + columnNumber) % 2)) {
+        console.log('invalid move, that\'s a forbidden square mate!');
+        return;
+      } else {
+        checkerBoard[rowLetter][columnNumber] = checkerBoard[checkerSelected[0]][checkerSelected[1]];
+        checkerBoard[checkerSelected[0]][checkerSelected[1]] = '';
+        this.setState( {
+          checkerBoard: checkerBoard
+        })
+        console.table(this.state.checkerBoard);
+      }
     }
   };
 
