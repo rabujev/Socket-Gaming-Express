@@ -26,10 +26,10 @@ io.on('connection', function(socket){
               console.log("Room succesfully joined!"); //id of the socket
               console.log("this socket's id = " + socket.id); //id of the socket
               if (clients.length < 1) {
-                  let player = 1;
+                  let player = 'X';
                   socket.emit('playerOrder', player);
               } else {
-                  let player = 2;
+                  let player = 'O';
                   socket.emit('playerOrder', player);
               };
               console.log('player 1 = ' + players[0]);

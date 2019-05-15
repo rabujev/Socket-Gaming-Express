@@ -13,16 +13,24 @@ code {
     monospace;
 }
 
+
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
-.boardGame {
+#boardGame {
   width : 90vh;
   height: 90vh;
   max-height: 90vw;
+}
+
+.reverseBoardGame {
+    width : 90vh;
+    height: 90vh;
+    max-height: 90vw;
+    transform: rotate(180deg);
 }
 
 .boardRow {

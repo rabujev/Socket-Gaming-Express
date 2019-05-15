@@ -35,13 +35,12 @@ class Board extends React.Component {
     this.state = {
       checkerBoard: {},
       isSelected: [],
-      room: '',
-      turnStatus: '',
+      playerPieces: '',
+      boardGame: '',
     };
     this.socket = io('localhost:8080');
 
     let paramId = props.match.params.id;
-    this.state.room = paramId; //useless for now, don't know about later
     this.socket.emit('join_room', paramId);  // attempt to join room upon loading the page
 
 
@@ -64,22 +63,22 @@ class Board extends React.Component {
     O.forEach(letter => fillRow(letter, 'O'));
 
     console.table(this.state.checkerBoard);
-
-
-    const showTurn = data => {
-        this.setState({turnStatus: data});
+    //___________________________________________________________________
+    const showTurn = data => {                      //Give X or O checker pieces to player depending on order of entrance in the Room
+        this.setState({playerPieces: data});
+        if (data === 'X') {document.getElementById("boardGame").style.transform = "rotate(180deg)";}
     };
 
     this.socket.on('playerOrder', function(player){ // display whose turn it is
         showTurn(player);
     });
 
-    this.socket.on('Room is full', function(){  // kick if room is full, maybe introduce a spectator mode in the future
+    this.socket.on('Room is full', function(){  // redirect to homepage if room is full, maybe introduce a spectator mode in the future
         window.alert('This Room is already full')
         window.location.replace("http://localhost:3000/");
     });
 
-    window.onbeforeunload = function(e) {  // Fix bug where if reload page, player 1 becomes player 2 along with player 2
+    window.onbeforeunload = function(e) {  // Fix bug where if reload page, player 1 becomes player 2 along with player 2, not fixed yet, postponed
         window.alert("You can't reload while in a gaming room, you will now be redirected to the homepage")
         window.location.replace("http://localhost:3000/");
         this.socket.emit('reload');
@@ -89,19 +88,23 @@ class Board extends React.Component {
 
   handleClick(row, number) {
     console.log(row, number);
-    if (this.state.checkerBoard[row][number]) {
+    console.log("this.state.checkerBoard[row][number] = " + this.state.checkerBoard[row][number]);
+    console.log("this.playerPieces = " + this.state.playerPieces);
+    if (this.state.checkerBoard[row][number] === this.state.playerPieces) {
+        console.log('ur player number is :' + this.state.playerPieces);
       this.state.isSelected = new Array(row, number);
       console.log(this.state.isSelected);
-    } else {
+  } else if (this.state.checkerBoard[row][number] === ''){
       return this.handleEmpty(row, number);
     }
 
   };
 
   handleEmpty(rowLetter, columnNumber) {
-    if (this.state.isSelected) {
+    if (this.state.isSelected.length) {  // Jam :  try to fix bug which causes react to crash when the first click is on an empty blue(valid) cell, Think I got it, just added length here or else the condition is just wether the array is undefined or not
       let checkerSelected = [...this.state.isSelected];
       let checkerBoard = this.state.checkerBoard;
+      // let checkerColour = checkerBoard[checkerSelected[0]][checkerSelected[1]]; // try to fix bug which causes react to crash when the first click is on an empty blue(valid) cell, postponed for now
       let checkerColour = checkerBoard[checkerSelected[0]][checkerSelected[1]];
       let rowNumericalValue = this.rowID.indexOf(rowLetter);
 
@@ -118,7 +121,7 @@ class Board extends React.Component {
       }
 
 
-    }
+  } else { return;}
   };
 
 
@@ -138,8 +141,8 @@ class Board extends React.Component {
 
     return (
       <div className="container">
-      {this.state.turnStatus}
-        <div className="boardGame">
+      <p>You are player : {this.state.playerPieces}</p>
+        <div id="boardGame">
           {this.rowID.map((id, index) => <Row
             id={id}
             key={id}
