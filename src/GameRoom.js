@@ -9,7 +9,7 @@ function Square(props) {
       onClick={props.onClick}
     >
       {props.stateOfSquare &&
-        <img src={`/images/${props.stateOfSquare}.png`}/>
+        <img src={`/images/${props.stateOfSquare}.png`} alt="checker piece"/>
       }
     </div>
     );
@@ -33,13 +33,13 @@ class Board extends React.Component {
     this.state = {
       checkerBoard: {},
       room: '',
+      turnStatus: '',
     };
-
 
     this.socket = io('localhost:8080');
 
     let paramId = props.match.params.id;
-    this.state.room = paramId;
+    this.state.room = paramId; //useless for now, don't know about later
     this.socket.emit('join_room', paramId);  // attempt to join room upon loading the page
 
     this.rowID = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
@@ -62,11 +62,25 @@ class Board extends React.Component {
     O.forEach(letter => fillRow(letter, 'O'));
 
     console.table(this.state.checkerBoard);
+    const showTurn = data => {
+        this.setState({turnStatus: data});
+    };
 
-    this.socket.on('playerOrder', function(player){
-        return player;
-        console.log(player);
+    this.socket.on('playerOrder', function(player){ // display whose turn it is
+        showTurn(player);
     });
+
+    this.socket.on('Room is full', function(){  // kick if room is full, maybe introduce a spectator mode in the future
+        window.alert('This Room is already full')
+        window.location.replace("http://localhost:3000/");
+    });
+
+    window.onbeforeunload = function(e) {  // Fix bug where if reload page, player 1 becomes player 2 along with player 2
+        window.alert("You can't reload while in a gaming room, you will now be redirected to the homepage")
+        window.location.replace("http://localhost:3000/");
+        this.socket.emit('reload', paramId);
+    };
+
   };
 
   render() {
@@ -84,6 +98,7 @@ class Board extends React.Component {
 
     return (
       <div className="container">
+      {this.state.turnStatus}
         <div className="boardGame">
           {this.rowID.map((id, index) => <Row
             id={id}
