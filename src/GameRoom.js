@@ -1,6 +1,6 @@
 import React from 'react';
 import io from "socket.io-client";
-
+//remove this line
 function Square(props) {
     return (
     <div
