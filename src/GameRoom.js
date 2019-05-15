@@ -101,10 +101,9 @@ class Board extends React.Component {
   };
 
   handleEmpty(rowLetter, columnNumber) {
-    if (this.state.isSelected.length) {  // Jam :  try to fix bug which causes react to crash when the first click is on an empty blue(valid) cell, Think I got it, just added length here or else the condition is just wether the array is undefined or not
+    if (this.state.isSelected.length) {
       let checkerSelected = [...this.state.isSelected];
       let checkerBoard = this.state.checkerBoard;
-      // let checkerColour = checkerBoard[checkerSelected[0]][checkerSelected[1]]; // try to fix bug which causes react to crash when the first click is on an empty blue(valid) cell, postponed for now
       let checkerColour = checkerBoard[checkerSelected[0]][checkerSelected[1]];
       let rowNumericalValue = this.rowID.indexOf(rowLetter);
 
@@ -112,16 +111,35 @@ class Board extends React.Component {
         console.log('invalid move, that\'s a forbidden square mate!');
         return;
       } else {
-        checkerBoard[rowLetter][columnNumber] = checkerBoard[checkerSelected[0]][checkerSelected[1]];
-        checkerBoard[checkerSelected[0]][checkerSelected[1]] = '';
-        this.setState( {
-          checkerBoard: checkerBoard
-        })
-        console.table(this.state.checkerBoard);
+          console.log("rowNumericalValue = " + rowNumericalValue + "columnNumber = " + columnNumber);
+            console.log(Number('' + rowNumericalValue + columnNumber));
+
+
+            // The code below makes each checker piece move one step at a time and only forward, I need to clean it up to make it more readable and more efficient
+        if (this.state.playerPieces === 'O') {
+            if ((Number('' + rowNumericalValue + columnNumber) === (Number('' + this.rowID.indexOf(checkerSelected[0]) + checkerSelected[1]) - 9)) ||
+            (Number('' + rowNumericalValue + columnNumber) === (Number('' + this.rowID.indexOf(checkerSelected[0]) + checkerSelected[1]) - 11))) {
+                checkerBoard[rowLetter][columnNumber] = checkerBoard[checkerSelected[0]][checkerSelected[1]];
+                checkerBoard[checkerSelected[0]][checkerSelected[1]] = '';
+                this.setState( {
+                  checkerBoard: checkerBoard
+                })
+                console.table(this.state.checkerBoard);
+            }
+        } else {
+            if ((Number('' + rowNumericalValue + columnNumber) === (Number('' + this.rowID.indexOf(checkerSelected[0]) + checkerSelected[1]) + 9)) ||
+            (Number('' + rowNumericalValue + columnNumber) === (Number('' + this.rowID.indexOf(checkerSelected[0]) + checkerSelected[1]) + 11))) {
+                checkerBoard[rowLetter][columnNumber] = checkerBoard[checkerSelected[0]][checkerSelected[1]];
+                checkerBoard[checkerSelected[0]][checkerSelected[1]] = '';
+                this.setState( {
+                  checkerBoard: checkerBoard
+                })
+                console.table(this.state.checkerBoard);
+            }
+        }
+        //______________________________________________________-__________________-
       }
-
-
-  } else { return;}
+    }
   };
 
 
