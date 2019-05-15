@@ -65,6 +65,26 @@ class Board extends React.Component {
 
     console.table(this.state.checkerBoard);
 
+
+    const showTurn = data => {
+        this.setState({turnStatus: data});
+    };
+
+    this.socket.on('playerOrder', function(player){ // display whose turn it is
+        showTurn(player);
+    });
+
+    this.socket.on('Room is full', function(){  // kick if room is full, maybe introduce a spectator mode in the future
+        window.alert('This Room is already full')
+        window.location.replace("http://localhost:3000/");
+    });
+
+    window.onbeforeunload = function(e) {  // Fix bug where if reload page, player 1 becomes player 2 along with player 2
+        window.alert("You can't reload while in a gaming room, you will now be redirected to the homepage")
+        window.location.replace("http://localhost:3000/");
+        this.socket.emit('reload');
+    };
+
   };
 
   handleClick(row, number) {
@@ -97,27 +117,10 @@ class Board extends React.Component {
         console.table(this.state.checkerBoard);
       }
 
-      const showTurn = data => {
-          this.setState({turnStatus: data});
-      };
-
-      this.socket.on('playerOrder', function(player){ // display whose turn it is
-          showTurn(player);
-      });
-
-      this.socket.on('Room is full', function(){  // kick if room is full, maybe introduce a spectator mode in the future
-          window.alert('This Room is already full')
-          window.location.replace("http://localhost:3000/");
-      });
-
-      window.onbeforeunload = function(e) {  // Fix bug where if reload page, player 1 becomes player 2 along with player 2
-          window.alert("You can't reload while in a gaming room, you will now be redirected to the homepage")
-          window.location.replace("http://localhost:3000/");
-          this.socket.emit('reload', paramId);
-      };
 
     }
   };
+
 
   render() {
     const squareNumber = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

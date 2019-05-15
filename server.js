@@ -17,12 +17,13 @@ io.on('connection', function(socket){
     players = []
     // JOINING A ROOM
   socket.on("join_room", paramId => { // paramId is taken from the URL
-    console.log("Joining Room: " + paramId);
+    console.log("Attempting to join Room: " + paramId);
     io.in(paramId).clients((error, clients) => {  //this was taken from the doc
       if (error) throw error;
       console.log(clients);  // shows sockets in the room before attempting to join it
       if (clients.length < 2) {  // max 2 sockets in the room
           socket.join(paramId, function() {
+              console.log("Room succesfully joined!"); //id of the socket
               console.log("this socket's id = " + socket.id); //id of the socket
               if (clients.length < 1) {
                   let player = 1;
@@ -35,7 +36,9 @@ io.on('connection', function(socket){
               console.log('player 2 = ' + players[1]);
               console.log(socket.rooms); // list of rooms that the socket is in
           })
-      } 
+      } else {
+          socket.emit('Room is full');
+      }
 
     });
 
