@@ -1,6 +1,6 @@
 import React from 'react';
 import io from "socket.io-client";
-
+import GameRules from "./gameRules";
 function Square(props) {
     return (
     <div
@@ -35,7 +35,13 @@ class Board extends React.Component {
     this.state = {
       checkerBoard: {},
       isSelected: [],
+      validBlueMoves: [],
+      validCapturesForBlue: [],
+      validOrangeMoves: [],
+      validCapturesForOrange: [],
+      turnToPlay: 'blue',
     };
+    //Creating the checkerBoard, an object with keys from A to J and values of 10 array elements
     this.state.checkerBoard = this.rowID.reduce((accumulator, currentValue, i) => {
       accumulator[currentValue] = new Array(10).fill('');
       return accumulator;
@@ -58,32 +64,59 @@ class Board extends React.Component {
 
   };
 
-  handleClick(row, number) {
-    console.log(row, number);
-    if (this.state.checkerBoard[row][number]) {
-      this.state.isSelected = new Array(row, number);
-      console.log(this.state.isSelected);
+  handleClick(rowLetter, number) {
+    let rowNumber = this.rowID.indexOf(rowLetter);
+    if (this.state.checkerBoard[rowLetter][number]) {
+
+      let player = this.state.checkerBoard[rowLetter][number];
+      switch(player) {
+        case 'X' :
+          let validBlueRow = this.rowID[rowNumber + 1];
+          let validBlueMoves = [validBlueRow + (number - 1), validBlueRow + (number + 1)];
+          this.setState({
+            validBlueMoves: [...validBlueMoves]
+          })
+          break;
+        case 'O' :
+          let validOrangeRow = this.rowID[rowNumber - 1];
+          let validOrangeMoves = [validOrangeRow + (number - 1), validOrangeRow + (number + 1)];
+
+          this.setState({
+            validOrangeMoves: [...validOrangeMoves]
+          })
+          break;
+    }
+      this.setState ({
+        isSelected : new Array(rowLetter, number),
+      })
     } else {
-      return this.handleEmpty(row, number);
+      return this.handleEmpty(rowLetter, number);
     }
 
   };
 
-  handleEmpty(rowLetter, columnNumber) {
-    if (this.state.isSelected) {
-      let checkerSelected = [...this.state.isSelected];
+  handleEmpty(rowLetter, number) {
+    if (this.state.isSelected.length > 0) {
+      let [selectedRow, selectedColumn] = [...this.state.isSelected];
       let checkerBoard = this.state.checkerBoard;
-      let checkerColour = checkerBoard[checkerSelected[0]][checkerSelected[1]];
       let rowNumericalValue = this.rowID.indexOf(rowLetter);
+      console.log(rowNumericalValue, number);
 
-      if (!((rowNumericalValue + columnNumber) % 2)) {
+      // Make it so that you can not move pieces on orange squares
+      if (!((rowNumericalValue + number) % 2)) {
         console.log('invalid move, that\'s a forbidden square mate!');
         return;
+
+      // } else if ((rowNumericalValue !== (this.rowID.indexOf(selectedRow) - 1)) &&
+      //   ((number !== (selectedColumn + 1)) || (number !== (selectedColumn - 1)))) {
+      //     console.log('can\'t move further than one square champ!');
       } else {
-        checkerBoard[rowLetter][columnNumber] = checkerBoard[checkerSelected[0]][checkerSelected[1]];
-        checkerBoard[checkerSelected[0]][checkerSelected[1]] = '';
+        checkerBoard[rowLetter][number] = checkerBoard[selectedRow][selectedColumn];
+        checkerBoard[selectedRow][selectedColumn] = '';
+
         this.setState( {
-          checkerBoard: checkerBoard
+          checkerBoard: checkerBoard,
+          isSelected:[]
         })
         console.table(this.state.checkerBoard);
       }
@@ -97,21 +130,25 @@ class Board extends React.Component {
     //  For each "letter" of rowID, replace it with  the numerical ID of each square,
     //  We map on these numerical ids, and replace them with <Square/>,
     //  Passing it an id and key referencing the row letter + square number.
-    const rowContent = this.rowID.map(row => squareNumber.map(number =>(<Square
-      id={row + number}
-      key={row + number}
-      stateOfSquare={this.state.checkerBoard[row][(number - 1)]}
-      onClick={() => this.handleClick(row, (number - 1))}
-    />)));
+    const rowContent = this.rowID.map(rowLetter => squareNumber.map(number =>(
+      <Square
+        id={rowLetter + number}
+        key={rowLetter + number}
+        stateOfSquare={this.state.checkerBoard[rowLetter][(number - 1)]}
+        onClick={() => this.handleClick(rowLetter, (number - 1))}
+      />
+    )));
 
     return (
       <div className="container">
         <div className="boardGame">
-          {this.rowID.map((id, index) => <Row
-            id={id}
-            key={id}
-            content={rowContent[index]}
-          />)}
+          {this.rowID.map((id, index) =>
+            <Row
+              id={id}
+              key={id}
+              content={rowContent[index]}
+            />
+          )}
         </div>
       </div>
     )
