@@ -36,7 +36,6 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     this.rowID = [...'ABCDEFGHIJ'];
-    this.side = ['blue', 'orange'];
     this.state = {
       checkerBoard: {},
       isSelected: [],
@@ -44,7 +43,7 @@ class Board extends React.Component {
       validBlueCaptures: [],
       validOrangeMoves: [],
       validOrangeCaptures: [],
-      turnToPlay: this.side[0],
+      bluesTurnToPlay: true
     };
     //Creating the checkerBoard, an object with keys from A to J and values of 10 array elements
     this.state.checkerBoard = this.rowID.reduce((accumulator, currentValue, i) => {
@@ -74,83 +73,10 @@ class Board extends React.Component {
 
   };
 
-  handleClick(rowLetter, number) {
+  handleClick(rowLetter, number, isBlueTurn) {
+
     if (this.state.checkerBoard[rowLetter][number]) {
-
-      // Determining which moves are valid
-      let player = this.state.checkerBoard[rowLetter][number];
-      switch(player) {
-        case 'X' :
-          // Legal blue moves
-          let validBlueRow = this.rowID[this.rowNumber[rowLetter] + 1];
-          let validBlueMoves = [];
-
-          if(number - 1 >= 0 && !(this.state.checkerBoard[validBlueRow][number - 1])) {
-            validBlueMoves.push(validBlueRow + (number - 1))
-          }
-
-          if(number + 1 < 10 && !(this.state.checkerBoard[validBlueRow][number + 1])) {
-            validBlueMoves.push(validBlueRow + (number + 1))
-          }
-
-
-          // Legal blue Captures
-          let validBlueCapturesRow = this.rowID[this.rowNumber[rowLetter] + 2];
-          let validBlueCaptures = [];
-          if(number - 2 >= 0 && (this.state.checkerBoard[validBlueRow][number - 1] === 'O')) {
-
-            if(!this.state.checkerBoard[validBlueCapturesRow][number - 2]){
-            validBlueCaptures.push(validBlueCapturesRow + (number - 2));
-            }
-          }
-          if(number + 2 < 10 && (this.state.checkerBoard[validBlueRow][number + 1] === 'O')) {
-
-            if(!this.state.checkerBoard[validBlueCapturesRow][number + 2]){
-            validBlueCaptures.push(validBlueCapturesRow + (number + 2));
-            }
-          }
-
-          this.setState({
-            validBlueMoves: [...validBlueMoves],
-            validBlueCaptures: [...validBlueCaptures]
-          })
-
-          break;
-        case 'O' :
-          // Legal orange Moves
-          let validOrangeRow = this.rowID[this.rowNumber[rowLetter] - 1];
-          let validOrangeMoves = [];
-
-          if(number - 1 >= 0 &&!(this.state.checkerBoard[validOrangeRow][number - 1])) {
-            validOrangeMoves.push(validOrangeRow + (number - 1))
-          }
-
-          if(number + 1 < 10 &&!(this.state.checkerBoard[validOrangeRow][number + 1])) {
-            validOrangeMoves.push(validOrangeRow + (number + 1))
-          }
-
-          // Legal orange Captures
-          let validOrangeCapturesRow = this.rowID[this.rowNumber[rowLetter] - 2];
-          let validOrangeCaptures = [];
-          if(number - 2 >= 0 && (this.state.checkerBoard[validOrangeRow][number - 1] === 'X')) {
-
-            if(!this.state.checkerBoard[validOrangeCapturesRow][number - 2]){
-            validOrangeCaptures.push(validOrangeCapturesRow + (number - 2));
-            }
-          }
-          if(number + 2 < 10 && (this.state.checkerBoard[validOrangeRow][number + 1] === 'X')) {
-
-            if(!this.state.checkerBoard[validBlueCapturesRow][number + 2]){
-            validOrangeCaptures.push(validOrangeCapturesRow + (number + 2));
-            }
-          }
-          this.setState({
-            validOrangeMoves: [...validOrangeMoves],
-            validOrangeCaptures: [...validOrangeCaptures]
-          })
-          console.log('valid Orange captures : ' + this.state.validOrangeCaptures);
-          break;
-      }
+      this.validMoves(rowLetter, number, isBlueTurn);
 
       this.setState ({
       isSelected : new Array(rowLetter, number),
@@ -160,6 +86,77 @@ class Board extends React.Component {
       return this.handleEmpty(rowLetter, number);
     }
 
+  };
+
+  validMoves(rowLetter, number, isBlueTurn) {
+    let player = this.state.checkerBoard[rowLetter][number];
+
+    if (isBlueTurn && player === 'X')  {
+      let validBlueRow = this.rowID[this.rowNumber[rowLetter] + 1];
+      let validBlueMoves = [];
+
+      if(number - 1 >= 0 && !(this.state.checkerBoard[validBlueRow][number - 1])) {
+        validBlueMoves.push(validBlueRow + (number - 1))
+      }
+
+      if(number + 1 < 10 && !(this.state.checkerBoard[validBlueRow][number + 1])) {
+        validBlueMoves.push(validBlueRow + (number + 1))
+      }
+
+      // Legal blue Captures
+      let validBlueCapturesRow = this.rowID[this.rowNumber[rowLetter] + 2];
+      let validBlueCaptures = [];
+      if(number - 2 >= 0 && (this.state.checkerBoard[validBlueRow][number - 1] === 'O')) {
+
+        if(!this.state.checkerBoard[validBlueCapturesRow][number - 2]){
+        validBlueCaptures.push(validBlueCapturesRow + (number - 2));
+        }
+      }
+      if(number + 2 < 10 && (this.state.checkerBoard[validBlueRow][number + 1] === 'O')) {
+
+        if(!this.state.checkerBoard[validBlueCapturesRow][number + 2]){
+        validBlueCaptures.push(validBlueCapturesRow + (number + 2));
+        }
+      }
+
+      this.setState({
+        validBlueMoves: [...validBlueMoves],
+        validBlueCaptures: [...validBlueCaptures]
+      })
+    } else {
+      if(!isBlueTurn && player === 'O'){
+        let validOrangeRow = this.rowID[this.rowNumber[rowLetter] - 1];
+        let validOrangeMoves = [];
+
+        if(number - 1 >= 0 &&!(this.state.checkerBoard[validOrangeRow][number - 1])) {
+          validOrangeMoves.push(validOrangeRow + (number - 1))
+        }
+
+        if(number + 1 < 10 &&!(this.state.checkerBoard[validOrangeRow][number + 1])) {
+          validOrangeMoves.push(validOrangeRow + (number + 1))
+        }
+        // Legal orange Captures
+        let validOrangeCapturesRow = this.rowID[this.rowNumber[rowLetter] - 2];
+        let validOrangeCaptures = [];
+
+        if(number - 2 >= 0 && (this.state.checkerBoard[validOrangeRow][number - 1] === 'X')) {
+
+          if(!this.state.checkerBoard[validOrangeCapturesRow][number - 2]){
+            validOrangeCaptures.push(validOrangeCapturesRow + (number - 2));
+          }
+        }
+        if(number + 2 < 10 && (this.state.checkerBoard[validOrangeRow][number + 1] === 'X')) {
+
+          if(!this.state.checkerBoard[validOrangeCapturesRow][number + 2]){
+            validOrangeCaptures.push(validOrangeCapturesRow + (number + 2));
+          }
+        }
+        this.setState({
+          validOrangeMoves: [...validOrangeMoves],
+          validOrangeCaptures: [...validOrangeCaptures]
+        })
+      }
+    }
   };
 
   handleEmpty(rowLetter, number) {
@@ -185,7 +182,8 @@ class Board extends React.Component {
           validBlueMoves: [],
           validOrangeMoves: [],
           validBlueCaptures: [],
-          validOrangeCaptures: []
+          validOrangeCaptures: [],
+          bluesTurnToPlay : !this.state.bluesTurnToPlay
         })
         console.table(this.state.checkerBoard);
       }
@@ -204,7 +202,7 @@ class Board extends React.Component {
         id={rowLetter + number}
         key={rowLetter + number}
         stateOfSquare={this.state.checkerBoard[rowLetter][(number - 1)]}
-        onClick={() => this.handleClick(rowLetter, (number - 1))}
+        onClick={() => this.handleClick(rowLetter, (number - 1), this.state.bluesTurnToPlay)}
         isSelected={this.state.isSelected.join('') === rowLetter + (number - 1) ? true : false}
         highlighted={this.state.validBlueMoves.includes(rowLetter + (number - 1)) ||
           this.state.validOrangeMoves.includes(rowLetter + (number - 1))}
