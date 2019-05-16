@@ -92,7 +92,9 @@ class Board extends React.Component {
     let player = this.state.checkerBoard[rowLetter][number];
 
     if (isBlueTurn && player === 'X')  {
-      let validBlueRow = this.rowID[this.rowNumber[rowLetter] + 1];
+      let validBlueRow = this.rowID[this.rowNumber[rowLetter] + 1]; // jam : only forward
+      let validBlueRowBackwards = this.rowID[this.rowNumber[rowLetter] - 1]; //backwards
+
       let validBlueMoves = [];
 
       if(number - 1 >= 0 && !(this.state.checkerBoard[validBlueRow][number - 1])) {
@@ -104,7 +106,8 @@ class Board extends React.Component {
       }
 
       // Legal blue Captures
-      let validBlueCapturesRow = this.rowID[this.rowNumber[rowLetter] + 2];
+      let validBlueCapturesRow = this.rowID[this.rowNumber[rowLetter] + 2]; // jam : only forward, this is a letter
+      let validBlueCapturesRowBackwards = this.rowID[this.rowNumber[rowLetter] - 2]; // backwards row, Landing spot
       let validBlueCaptures = [];
       if(number - 2 >= 0 && (this.state.checkerBoard[validBlueRow][number - 1] === 'O')) {
 
@@ -112,12 +115,27 @@ class Board extends React.Component {
         validBlueCaptures.push(validBlueCapturesRow + (number - 2));
         }
       }
+      if(number - 2 >= 0 && (this.state.checkerBoard[validBlueRowBackwards][number - 1] === 'O')) { //backwards too
+
+        if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number - 2]){
+        validBlueCaptures.push(validBlueCapturesRowBackwards + (number - 2));
+        }
+      }
+
       if(number + 2 < 10 && (this.state.checkerBoard[validBlueRow][number + 1] === 'O')) {
 
         if(!this.state.checkerBoard[validBlueCapturesRow][number + 2]){
         validBlueCaptures.push(validBlueCapturesRow + (number + 2));
         }
       }
+      if(number + 2 < 10 && (this.state.checkerBoard[validBlueRowBackwards][number + 1] === 'O')) {//backwards too
+
+        if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number + 2]){
+        validBlueCaptures.push(validBlueCapturesRowBackwards + (number + 2));
+        }
+
+      }
+
 
       this.setState({
         validBlueMoves: [...validBlueMoves],
@@ -125,7 +143,8 @@ class Board extends React.Component {
       })
     } else {
       if(!isBlueTurn && player === 'O'){
-        let validOrangeRow = this.rowID[this.rowNumber[rowLetter] - 1];
+        let validOrangeRow = this.rowID[this.rowNumber[rowLetter] - 1]; // jam : only forward
+        let validOrangeRowBackwards = this.rowID[this.rowNumber[rowLetter] + 1]; //backwards
         let validOrangeMoves = [];
 
         if(number - 1 >= 0 &&!(this.state.checkerBoard[validOrangeRow][number - 1])) {
@@ -137,6 +156,7 @@ class Board extends React.Component {
         }
         // Legal orange Captures
         let validOrangeCapturesRow = this.rowID[this.rowNumber[rowLetter] - 2];
+        let validOrangeCapturesRowBackwards = this.rowID[this.rowNumber[rowLetter] + 2]; // backwards row, Landing spot
         let validOrangeCaptures = [];
 
         if(number - 2 >= 0 && (this.state.checkerBoard[validOrangeRow][number - 1] === 'X')) {
@@ -145,12 +165,27 @@ class Board extends React.Component {
             validOrangeCaptures.push(validOrangeCapturesRow + (number - 2));
           }
         }
+        if(number - 2 >= 0 && (this.state.checkerBoard[validOrangeRowBackwards][number - 1] === 'X')) { //backwards too
+
+          if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number - 2]){
+          validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number - 2));
+          }
+        }
+
         if(number + 2 < 10 && (this.state.checkerBoard[validOrangeRow][number + 1] === 'X')) {
 
           if(!this.state.checkerBoard[validOrangeCapturesRow][number + 2]){
             validOrangeCaptures.push(validOrangeCapturesRow + (number + 2));
           }
         }
+        if(number + 2 < 10 && (this.state.checkerBoard[validOrangeRowBackwards][number + 1] === 'X')) {//backwards too
+
+          if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number + 2]){
+          validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number + 2));
+          }
+
+        }
+
         this.setState({
           validOrangeMoves: [...validOrangeMoves],
           validOrangeCaptures: [...validOrangeCaptures]
