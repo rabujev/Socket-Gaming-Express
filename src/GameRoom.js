@@ -131,11 +131,12 @@ class Board extends React.Component {
                     validBlueCaptures.push(validBlueCapturesRow + (number - 2));
                 }
             }
-            if(number - 2 >= 0 && (this.state.checkerBoard[validBlueRowBackwards][number - 1] === 'O')) { //backwards too
+            if((number - 2 >= 0 && validBlueRowBackwards >= 0) &&
+            (this.state.checkerBoard[validBlueRowBackwards][number - 1] === 'O')) { //backwards too
 
-                if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number - 2]){
-                    validBlueCaptures.push(validBlueCapturesRowBackwards + (number - 2));
-                }
+              if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number - 2]){
+                  validBlueCaptures.push(validBlueCapturesRowBackwards + (number - 2));
+              }
             }
 
             if(number + 2 < 10 && (this.state.checkerBoard[validBlueRow][number + 1] === 'O')) {
@@ -144,11 +145,12 @@ class Board extends React.Component {
                     validBlueCaptures.push(validBlueCapturesRow + (number + 2));
                 }
             }
-            if(number + 2 < 10 && (this.state.checkerBoard[validBlueRowBackwards][number + 1] === 'O')) {//backwards too
+            if((number + 2 < 10 && validBlueRowBackwards < 10) &&
+            (this.state.checkerBoard[validBlueRowBackwards][number + 1] === 'O')) {//backwards too
 
-                if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number + 2]){
-                    validBlueCaptures.push(validBlueCapturesRowBackwards + (number + 2));
-                }
+              if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number + 2]){
+                  validBlueCaptures.push(validBlueCapturesRowBackwards + (number + 2));
+              }
             }
 
 
@@ -181,7 +183,8 @@ class Board extends React.Component {
                     validOrangeCaptures.push(validOrangeCapturesRow + (number - 2));
                   }
                 }
-                if(number - 2 >= 0 && (this.state.checkerBoard[validOrangeRowBackwards][number - 1] === 'X')) { //backwards too
+                if((number - 2 >= 0 && validOrangeRowBackwards >= 0) &&
+                (this.state.checkerBoard[validOrangeRowBackwards][number - 1] === 'X')) { //backwards too
 
                     if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number - 2]){
                         validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number - 2));
@@ -194,11 +197,12 @@ class Board extends React.Component {
                         validOrangeCaptures.push(validOrangeCapturesRow + (number + 2));
                     }
                 }
-                if(number + 2 < 10 && (this.state.checkerBoard[validOrangeRowBackwards][number + 1] === 'X')) {//backwards too
+                if((number + 2 < 10 && validOrangeRowBackwards < 10) &&
+                (this.state.checkerBoard[validOrangeRowBackwards][number + 1] === 'X')) {//backwards too
 
-                    if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number + 2]){
-                        validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number + 2));
-                    }
+                  if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number + 2]){
+                      validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number + 2));
+                  }
 
                 }
 
@@ -235,7 +239,7 @@ class Board extends React.Component {
         } else { rowToDel = this.rowID[this.rowNumber[rowLetter] - 1];
           console.log('row to del is = ' + rowToDel);
         }
-        if (this.rowNumber[this.state.isSelected[0]] > number ) {
+        if (this.state.isSelected[1] > number ) {
              colToDel = number + 1;
         } else { colToDel = number - 1;}
         checkerBoard[rowToDel][colToDel] = '';
