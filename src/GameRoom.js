@@ -45,6 +45,9 @@ class Board extends React.Component {
       validOrangeCaptures: [],
       bluesTurnToPlay: true
     };
+
+    this.socket = io('localhost:8080');
+
     //Creating the checkerBoard, an object with keys from A to J and values of 10 array elements
     this.state.checkerBoard = this.rowID.reduce((accumulator, currentValue, i) => {
       accumulator[currentValue] = new Array(10).fill('');
@@ -255,31 +258,30 @@ class Board extends React.Component {
         this.socket.emit('MovementClient', {
             checkerBoard: this.state.checkerBoard
         })
-        
     } else if(this.state.validOrangeCaptures.length < 1 && this.state.validBlueCaptures.length < 1) {
-if(this.state.validOrangeMoves.includes(rowLetter + number) ||
-              this.state.validBlueMoves.includes(rowLetter + number)) {
+        if(this.state.validOrangeMoves.includes(rowLetter + number) ||
+        this.state.validBlueMoves.includes(rowLetter + number)) {
 
-        checkerBoard[rowLetter][number] = checkerBoard[selectedRow][selectedColumn];
-        checkerBoard[selectedRow][selectedColumn] = '';
+            checkerBoard[rowLetter][number] = checkerBoard[selectedRow][selectedColumn];
+            checkerBoard[selectedRow][selectedColumn] = '';
 
-        this.setState( {
-          checkerBoard: checkerBoard,
-          isSelected:[],
-          validBlueMoves: [],
-          validOrangeMoves: [],
-          validBlueCaptures: [],
-          validOrangeCaptures: [],
-          bluesTurnToPlay : !this.state.bluesTurnToPlay
-        })
+            this.setState( {
+              checkerBoard: checkerBoard,
+              isSelected:[],
+              validBlueMoves: [],
+              validOrangeMoves: [],
+              validBlueCaptures: [],
+              validOrangeCaptures: [],
+              bluesTurnToPlay : !this.state.bluesTurnToPlay
+            })
 
-        this.socket.emit('MovementClient', {
-            checkerBoard: this.state.checkerBoard
-        })
+            this.socket.emit('MovementClient', {
+                checkerBoard: this.state.checkerBoard
+            })
 
-        console.table(this.state.checkerBoard);
-      }
-  }
+            console.table(this.state.checkerBoard);
+        }
+    }
     }
   };
 
