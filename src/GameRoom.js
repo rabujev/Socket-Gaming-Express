@@ -92,6 +92,7 @@ class Board extends React.Component {
   };
 
   validMoves(rowLetter, number, isBlueTurn) {
+
     let player = this.state.checkerBoard[rowLetter][number];
 
     if (isBlueTurn && player === 'X')  {
@@ -273,6 +274,95 @@ class Board extends React.Component {
       }
     }
   };
+
+  endOfTurn() {
+    if(this.state.isBlueTurn) {
+      this.state.checkerBoard.map(row => row.map((value, index) => {
+
+        let validOrangeRow = this.rowID[this.rowNumber[row] - 1]; // jam : only forward
+        let validOrangeRowBackwards = this.rowID[this.rowNumber[row] + 1]; //backwards
+        let validOrangeCapturesRow = this.rowID[this.rowNumber[row] - 2];
+        let validOrangeCapturesRowBackwards = this.rowID[this.rowNumber[row] + 2]; // backwards row, Landing spot
+        let validOrangeCaptures = [];
+
+        if (value === 'O') {
+
+          if(index - 2 >= 0 && (this.state.checkerBoard[row][index - 1] === 'X')) {
+
+            if(!this.state.checkerBoard[validOrangeCapturesRow][index - 2]){
+              validOrangeCaptures.push(validOrangeCapturesRow + (index - 2));
+            }
+          }
+          if((index - 2 >= 0 && validOrangeRowBackwards >= 0) &&
+          (this.state.checkerBoard[validOrangeRowBackwards][index - 1] === 'X')) { //backwards too
+
+            if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][index - 2]){
+                validOrangeCaptures.push(validOrangeCapturesRowBackwards + (index - 2));
+            }
+          }
+
+          if(index + 2 < 10 && (this.state.checkerBoard[validOrangeRow][index + 1] === 'X')) {
+
+            if(!this.state.checkerBoard[validOrangeCapturesRow][index + 2]){
+                validOrangeCaptures.push(validOrangeCapturesRow + (index + 2));
+            }
+          }
+          if((index + 2 < 10 && validOrangeRowBackwards < 10) &&
+          (this.state.checkerBoard[validOrangeRowBackwards][index + 1] === 'X')) {//backwards too
+
+            if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][index + 2]){
+                validOrangeCaptures.push(validOrangeCapturesRowBackwards + (index + 2));
+            }
+          }
+        }
+        return validOrangeCaptures;
+      }))
+    } else {
+      //Means it's orange turn
+      this.state.checkerBoard.map(row => row.map((value, index) => {
+
+        let validBlueRow = this.rowID[this.rowNumber[row] + 1]; // jam : only forward
+        let validBlueRowBackwards = this.rowID[this.rowNumber[row] - 1]; //backwards
+        let validBlueCapturesRow = this.rowID[this.rowNumber[row] + 2]; // jam : only forward, this is a letter
+        let validBlueCapturesRowBackwards = this.rowID[this.rowNumber[row] - 2]; // backwards row, Landing spot
+        let validBlueCaptures = [];
+
+        if (value === 'X') {
+
+          if(index - 2 >= 0 && (this.state.checkerBoard[validBlueRow][index - 1] === 'O')) {
+
+            if(!this.state.checkerBoard[validBlueCapturesRow][index - 2]){
+                validBlueCaptures.push(validBlueCapturesRow + (index - 2));
+            }
+          }
+
+          if((index - 2 >= 0 && validBlueRowBackwards >= 0) &&
+          (this.state.checkerBoard[validBlueRowBackwards][index - 1] === 'O')) { //backwards too
+
+            if(!this.state.checkerBoard[validBlueCapturesRowBackwards][index - 2]){
+                validBlueCaptures.push(validBlueCapturesRowBackwards + (index - 2));
+            }
+          }
+
+          if(index + 2 < 10 && (this.state.checkerBoard[validBlueRow][index + 1] === 'O')) {
+
+            if(!this.state.checkerBoard[validBlueCapturesRow][index + 2]){
+                validBlueCaptures.push(validBlueCapturesRow + (index + 2));
+            }
+          }
+
+          if((index + 2 < 10 && validBlueRowBackwards < 10) &&
+          (this.state.checkerBoard[validBlueRowBackwards][index + 1] === 'O')) {//backwards too
+
+            if(!this.state.checkerBoard[validBlueCapturesRowBackwards][index + 2]){
+                validBlueCaptures.push(validBlueCapturesRowBackwards + (index + 2));
+            }
+          }
+        }
+      return validBlueCaptures;
+      }
+    ))}
+  }
 
   render() {
     const squareNumber = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
