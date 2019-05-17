@@ -252,9 +252,10 @@ class Board extends React.Component {
         })
         console.table(this.state.checkerBoard);
 
-        // this.socket.emit('MovementClient', {
-        //     checkerBoard: this.state.checkerBoard
-        // })
+        this.socket.emit('MovementClient', {
+            checkerBoard: this.state.checkerBoard
+        })
+        
     } else if(this.state.validOrangeCaptures.length < 1 && this.state.validBlueCaptures.length < 1) {
 if(this.state.validOrangeMoves.includes(rowLetter + number) ||
               this.state.validBlueMoves.includes(rowLetter + number)) {
@@ -272,10 +273,10 @@ if(this.state.validOrangeMoves.includes(rowLetter + number) ||
           bluesTurnToPlay : !this.state.bluesTurnToPlay
         })
 
-        // this.socket.emit('MovementClient', {
-        //     checkerBoard: this.state.checkerBoard
-        // })
-        //
+        this.socket.emit('MovementClient', {
+            checkerBoard: this.state.checkerBoard
+        })
+
         console.table(this.state.checkerBoard);
       }
   }
