@@ -232,8 +232,9 @@ class Board extends React.Component {
         if (this.rowNumber[this.state.isSelected[0]] > this.rowNumber[rowLetter]) {
              rowToDel = this.rowID[this.rowNumber[rowLetter] + 1];
              console.log(rowToDel);
-        } else { rowToDel = this.rowID[this.rowNumber[rowLetter] - 1];             console.log('row to del is = ' + rowToDel);
-}
+        } else { rowToDel = this.rowID[this.rowNumber[rowLetter] - 1];
+          console.log('row to del is = ' + rowToDel);
+        }
         if (this.rowNumber[this.state.isSelected[0]] > number ) {
              colToDel = number + 1;
         } else { colToDel = number - 1;}
@@ -247,13 +248,12 @@ class Board extends React.Component {
           validOrangeMoves: [],
           validBlueCaptures: [],
           validOrangeCaptures: [],
-          // bluesTurnToPlay : !this.state.bluesTurnToPlay
+          bluesTurnToPlay : !this.state.bluesTurnToPlay
         })
         console.table(this.state.checkerBoard);
-    } else if (this.state.validOrangeCaptures.length < 1 &&
-        this.state.validBlueCaptures.length < 1)
-    if (this.state.validOrangeMoves.includes(rowLetter + number) ||
-          this.state.validBlueMoves.includes(rowLetter + number)) {
+    } else if(this.state.validOrangeMoves.includes(rowLetter + number) ||
+              this.state.validBlueMoves.includes(rowLetter + number)) {
+
         checkerBoard[rowLetter][number] = checkerBoard[selectedRow][selectedColumn];
         checkerBoard[selectedRow][selectedColumn] = '';
 
