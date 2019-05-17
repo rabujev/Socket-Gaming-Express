@@ -76,146 +76,130 @@ class Board extends React.Component {
 
   };
 
-  // startOfTurn() {
-  //   if (this.state.bluesTurnToPlay) {
-  //       this.state.rowID.map((letter, index) =>
-  //           (this.state.checkerBoard[letter].map(function(number, index) {
-  //               if ((this.rowNumber[letter] + number) % 2 && (this.state.checkerBoard[letter][number] == 'X')) {
-  //                   return;
-  //               }
-  //           }
-  //           )
-  //           )
-  //       )
-  //   }
-  // };
-
   handleClick(rowLetter, number, isBlueTurn) {
-// this.startOfTurn();
     if (this.state.checkerBoard[rowLetter][number]) {
-        if(this.state.validOrangeCaptures.length < 1 && this.state.validBlueCaptures.length < 1) {
+      if(this.state.validOrangeCaptures.length < 1 && this.state.validBlueCaptures.length < 1) {
 
-          this.validMoves(rowLetter, number, isBlueTurn);
+        this.validMoves(rowLetter, number, isBlueTurn);
 
-          this.setState ({
-          isSelected : new Array(rowLetter, number),
-          })
-        }
+        this.setState ({
+        isSelected : new Array(rowLetter, number),
+        })
+      }
     } else {
       return this.handleEmpty(rowLetter, number);
     }
-
   };
 
   validMoves(rowLetter, number, isBlueTurn) {
-        let player = this.state.checkerBoard[rowLetter][number];
+    let player = this.state.checkerBoard[rowLetter][number];
 
-        if (isBlueTurn && player === 'X')  {
-            let validBlueRow = this.rowID[this.rowNumber[rowLetter] + 1]; // jam : only forward
-            let validBlueRowBackwards = this.rowID[this.rowNumber[rowLetter] - 1]; //backwards
+    if (isBlueTurn && player === 'X')  {
+      let validBlueRow = this.rowID[this.rowNumber[rowLetter] + 1]; // jam : only forward
+      let validBlueRowBackwards = this.rowID[this.rowNumber[rowLetter] - 1]; //backwards
+      let validBlueMoves = [];
 
-            let validBlueMoves = [];
+      if(number - 1 >= 0 && !(this.state.checkerBoard[validBlueRow][number - 1])) {
+          validBlueMoves.push(validBlueRow + (number - 1))
+      }
 
-            if(number - 1 >= 0 && !(this.state.checkerBoard[validBlueRow][number - 1])) {
-                validBlueMoves.push(validBlueRow + (number - 1))
-            }
+      if(number + 1 < 10 && !(this.state.checkerBoard[validBlueRow][number + 1])) {
+          validBlueMoves.push(validBlueRow + (number + 1))
+      }
 
-            if(number + 1 < 10 && !(this.state.checkerBoard[validBlueRow][number + 1])) {
-                validBlueMoves.push(validBlueRow + (number + 1))
-            }
+        // Legal blue Captures
+      let validBlueCapturesRow = this.rowID[this.rowNumber[rowLetter] + 2]; // jam : only forward, this is a letter
+      let validBlueCapturesRowBackwards = this.rowID[this.rowNumber[rowLetter] - 2]; // backwards row, Landing spot
+      let validBlueCaptures = [];
 
-              // Legal blue Captures
-            let validBlueCapturesRow = this.rowID[this.rowNumber[rowLetter] + 2]; // jam : only forward, this is a letter
-            let validBlueCapturesRowBackwards = this.rowID[this.rowNumber[rowLetter] - 2]; // backwards row, Landing spot
-            let validBlueCaptures = [];
-            if(number - 2 >= 0 && (this.state.checkerBoard[validBlueRow][number - 1] === 'O')) {
+      if(number - 2 >= 0 && (this.state.checkerBoard[validBlueRow][number - 1] === 'O')) {
 
-                if(!this.state.checkerBoard[validBlueCapturesRow][number - 2]){
-                    validBlueCaptures.push(validBlueCapturesRow + (number - 2));
-                }
-            }
-            if((number - 2 >= 0 && validBlueRowBackwards >= 0) &&
-            (this.state.checkerBoard[validBlueRowBackwards][number - 1] === 'O')) { //backwards too
-
-              if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number - 2]){
-                  validBlueCaptures.push(validBlueCapturesRowBackwards + (number - 2));
-              }
-            }
-
-            if(number + 2 < 10 && (this.state.checkerBoard[validBlueRow][number + 1] === 'O')) {
-
-                if(!this.state.checkerBoard[validBlueCapturesRow][number + 2]){
-                    validBlueCaptures.push(validBlueCapturesRow + (number + 2));
-                }
-            }
-            if((number + 2 < 10 && validBlueRowBackwards < 10) &&
-            (this.state.checkerBoard[validBlueRowBackwards][number + 1] === 'O')) {//backwards too
-
-              if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number + 2]){
-                  validBlueCaptures.push(validBlueCapturesRowBackwards + (number + 2));
-              }
-            }
-
-
-
-            this.setState({
-                validBlueMoves: [...validBlueMoves],
-                validBlueCaptures: [...validBlueCaptures]
-            })
-        } else {
-            if(!isBlueTurn && player === 'O'){
-                let validOrangeRow = this.rowID[this.rowNumber[rowLetter] - 1]; // jam : only forward
-                let validOrangeRowBackwards = this.rowID[this.rowNumber[rowLetter] + 1]; //backwards
-                let validOrangeMoves = [];
-
-                if(number - 1 >= 0 &&!(this.state.checkerBoard[validOrangeRow][number - 1])) {
-                  validOrangeMoves.push(validOrangeRow + (number - 1))
-                }
-
-                if(number + 1 < 10 &&!(this.state.checkerBoard[validOrangeRow][number + 1])) {
-                  validOrangeMoves.push(validOrangeRow + (number + 1))
-                }
-                // Legal orange Captures
-                let validOrangeCapturesRow = this.rowID[this.rowNumber[rowLetter] - 2];
-                let validOrangeCapturesRowBackwards = this.rowID[this.rowNumber[rowLetter] + 2]; // backwards row, Landing spot
-                let validOrangeCaptures = [];
-
-                if(number - 2 >= 0 && (this.state.checkerBoard[validOrangeRow][number - 1] === 'X')) {
-
-                  if(!this.state.checkerBoard[validOrangeCapturesRow][number - 2]){
-                    validOrangeCaptures.push(validOrangeCapturesRow + (number - 2));
-                  }
-                }
-                if((number - 2 >= 0 && validOrangeRowBackwards >= 0) &&
-                (this.state.checkerBoard[validOrangeRowBackwards][number - 1] === 'X')) { //backwards too
-
-                    if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number - 2]){
-                        validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number - 2));
-                    }
-                }
-
-                if(number + 2 < 10 && (this.state.checkerBoard[validOrangeRow][number + 1] === 'X')) {
-
-                    if(!this.state.checkerBoard[validOrangeCapturesRow][number + 2]){
-                        validOrangeCaptures.push(validOrangeCapturesRow + (number + 2));
-                    }
-                }
-                if((number + 2 < 10 && validOrangeRowBackwards < 10) &&
-                (this.state.checkerBoard[validOrangeRowBackwards][number + 1] === 'X')) {//backwards too
-
-                  if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number + 2]){
-                      validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number + 2));
-                  }
-
-                }
-
-                this.setState({
-                  validOrangeMoves: [...validOrangeMoves],
-                  validOrangeCaptures: [...validOrangeCaptures]
-                })
-
-            }
+        if(!this.state.checkerBoard[validBlueCapturesRow][number - 2]){
+            validBlueCaptures.push(validBlueCapturesRow + (number - 2));
         }
+      }
+
+      if((number - 2 >= 0 && validBlueRowBackwards >= 0) &&
+      (this.state.checkerBoard[validBlueRowBackwards][number - 1] === 'O')) { //backwards too
+
+        if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number - 2]){
+            validBlueCaptures.push(validBlueCapturesRowBackwards + (number - 2));
+        }
+      }
+
+      if(number + 2 < 10 && (this.state.checkerBoard[validBlueRow][number + 1] === 'O')) {
+
+        if(!this.state.checkerBoard[validBlueCapturesRow][number + 2]){
+            validBlueCaptures.push(validBlueCapturesRow + (number + 2));
+        }
+      }
+
+      if((number + 2 < 10 && validBlueRowBackwards < 10) &&
+      (this.state.checkerBoard[validBlueRowBackwards][number + 1] === 'O')) {//backwards too
+
+        if(!this.state.checkerBoard[validBlueCapturesRowBackwards][number + 2]){
+            validBlueCaptures.push(validBlueCapturesRowBackwards + (number + 2));
+        }
+      }
+
+      this.setState({
+          validBlueMoves: [...validBlueMoves],
+          validBlueCaptures: [...validBlueCaptures]
+      })
+    } else {
+      if(!isBlueTurn && player === 'O'){
+        let validOrangeRow = this.rowID[this.rowNumber[rowLetter] - 1]; // jam : only forward
+        let validOrangeRowBackwards = this.rowID[this.rowNumber[rowLetter] + 1]; //backwards
+        let validOrangeMoves = [];
+
+        if(number - 1 >= 0 &&!(this.state.checkerBoard[validOrangeRow][number - 1])) {
+          validOrangeMoves.push(validOrangeRow + (number - 1))
+        }
+
+        if(number + 1 < 10 &&!(this.state.checkerBoard[validOrangeRow][number + 1])) {
+          validOrangeMoves.push(validOrangeRow + (number + 1))
+        }
+        // Legal orange Captures
+        let validOrangeCapturesRow = this.rowID[this.rowNumber[rowLetter] - 2];
+        let validOrangeCapturesRowBackwards = this.rowID[this.rowNumber[rowLetter] + 2]; // backwards row, Landing spot
+        let validOrangeCaptures = [];
+
+        if(number - 2 >= 0 && (this.state.checkerBoard[validOrangeRow][number - 1] === 'X')) {
+
+          if(!this.state.checkerBoard[validOrangeCapturesRow][number - 2]){
+            validOrangeCaptures.push(validOrangeCapturesRow + (number - 2));
+          }
+        }
+        if((number - 2 >= 0 && validOrangeRowBackwards >= 0) &&
+        (this.state.checkerBoard[validOrangeRowBackwards][number - 1] === 'X')) { //backwards too
+
+          if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number - 2]){
+              validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number - 2));
+          }
+        }
+
+        if(number + 2 < 10 && (this.state.checkerBoard[validOrangeRow][number + 1] === 'X')) {
+
+          if(!this.state.checkerBoard[validOrangeCapturesRow][number + 2]){
+              validOrangeCaptures.push(validOrangeCapturesRow + (number + 2));
+          }
+        }
+        if((number + 2 < 10 && validOrangeRowBackwards < 10) &&
+        (this.state.checkerBoard[validOrangeRowBackwards][number + 1] === 'X')) {//backwards too
+
+          if(!this.state.checkerBoard[validOrangeCapturesRowBackwards][number + 2]){
+              validOrangeCaptures.push(validOrangeCapturesRowBackwards + (number + 2));
+          }
+
+        }
+
+        this.setState({
+          validOrangeMoves: [...validOrangeMoves],
+          validOrangeCaptures: [...validOrangeCaptures]
+        })
+
+      }
+    }
   };
 
   handleEmpty(rowLetter, number) {
@@ -232,7 +216,7 @@ class Board extends React.Component {
       }
 
       if (this.state.validOrangeCaptures.includes(rowLetter + number) ||
-          this.state.validBlueCaptures.includes(rowLetter + number)) {
+      this.state.validBlueCaptures.includes(rowLetter + number)) {
         checkerBoard[rowLetter][number] = checkerBoard[selectedRow][selectedColumn];
         let rowToDel;
         let colToDel;
@@ -262,30 +246,31 @@ class Board extends React.Component {
         this.socket.emit('MovementClient', {
             checkerBoard: this.state.checkerBoard
         })
-    } else if(this.state.validOrangeCaptures.length < 1 && this.state.validBlueCaptures.length < 1) {
+      } else if(this.state.validOrangeCaptures.length < 1 && this.state.validBlueCaptures.length < 1) {
+
         if(this.state.validOrangeMoves.includes(rowLetter + number) ||
         this.state.validBlueMoves.includes(rowLetter + number)) {
 
-            checkerBoard[rowLetter][number] = checkerBoard[selectedRow][selectedColumn];
-            checkerBoard[selectedRow][selectedColumn] = '';
+          checkerBoard[rowLetter][number] = checkerBoard[selectedRow][selectedColumn];
+          checkerBoard[selectedRow][selectedColumn] = '';
 
-            this.setState( {
-              checkerBoard: checkerBoard,
-              isSelected:[],
-              validBlueMoves: [],
-              validOrangeMoves: [],
-              validBlueCaptures: [],
-              validOrangeCaptures: [],
-              bluesTurnToPlay : !this.state.bluesTurnToPlay
-            })
+          this.setState( {
+            checkerBoard: checkerBoard,
+            isSelected:[],
+            validBlueMoves: [],
+            validOrangeMoves: [],
+            validBlueCaptures: [],
+            validOrangeCaptures: [],
+            bluesTurnToPlay : !this.state.bluesTurnToPlay
+          })
 
-            this.socket.emit('MovementClient', {
-                checkerBoard: this.state.checkerBoard
-            })
+          this.socket.emit('MovementClient', {
+              checkerBoard: this.state.checkerBoard
+          })
 
-            console.table(this.state.checkerBoard);
+          console.table(this.state.checkerBoard);
         }
-    }
+      }
     }
   };
 
